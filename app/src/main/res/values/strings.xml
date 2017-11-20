@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">BTmirror</string>
     <string name="UUID">a0f220e8-5c47-4200-b9ec-3046b5167ad4</string>
+    <string name="confText">Configure</string>
 </resources>

@@ -15,6 +15,8 @@ import android.util.Log;
 import android.widget.Adapter;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Set;
 import java.util.UUID;
@@ -23,17 +25,22 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
+    String MAC = "";
+    final public UUID uuid = UUID.fromString(getResources().getString(R.string.UUID));
+    final public BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); //get bluetooth adapter
+    public BluetoothSocket mSocket = null;                                                   //create a new socket
+    public InputStream mmInStream = null;                   //Initialize IO streams
+    public OutputStream mmOutStream = null;
+    byte[] mmBuffer;                                // mmBuffer store for the stream
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String MAC = "";
-        UUID uuid = UUID.fromString(getResources().getString(R.string.UUID));
-        final BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); //get bluetooth adapter
-        final BluetoothSocket mSocket;
+
         if (!mBluetoothAdapter.isEnabled()) {          //If bluetooth is not enadbled, enable it
             mBluetoothAdapter.enable();
         }
+
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();  //check if already paired
         if (pairedDevices.size() > 0) {
             // There are paired devices. Get the name and address of each paired device.
@@ -45,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
         BluetoothSocket tmp = null;
         try {
@@ -70,6 +78,40 @@ public class MainActivity extends AppCompatActivity {
             }
             return;
         }
+
+        InputStream tmpIn = null;
+        OutputStream tmpOut = null;
+        try {
+            tmpIn = mSocket.getInputStream();
+        } catch (IOException e) {
+            Log.e(TAG, "Error occurred when creating input stream", e);
+        }
+        try {
+            tmpOut = mSocket.getOutputStream();
+        } catch (IOException e) {
+            Log.e(TAG, "Error occurred when creating output stream", e);
+        }
+
+        mmInStream = tmpIn;
+        mmOutStream = tmpOut;
+    }
+    @Override
+            protected void onResume(){
+        super.onResume();
+        if (!mBluetoothAdapter.isEnabled()) {          //If bluetooth is not enadbled, enable it
+            mBluetoothAdapter.enable();
+        }
+
+    }
+
+
+
+    // Call this from the main activity to send data to the remote device.
+    void write(byte[] bytes, OutputStream mmOutStream) {
+        try {
+            mmOutStream.write(bytes);
+        } catch (IOException e) {
+            Log.e(TAG, "Error occurred when sending data", e);
+        }
     }
 }
-

@@ -69,11 +69,6 @@ public class MyBluetoothService {
                 try {
                     // Read from the InputStream.
                     numBytes = mmInStream.read(mmBuffer);
-                    // Send the obtained bytes to the UI activity.
-                    Message readMsg = mHandler.g(
-                            MessageConstants.MESSAGE_READ, numBytes, -1,
-                            mmBuffer);
-                    readMsg.sendToTarget();
                 } catch (IOException e) {
                     Log.d(TAG, "Input stream was disconnected", e);
                     break;
@@ -85,22 +80,12 @@ public class MyBluetoothService {
         public void write(byte[] bytes) {
             try {
                 mmOutStream.write(bytes);
-
-                // Share the sent message with the UI activity.
-                Message writtenMsg = mHandler.obtainMessage(
-                        MessageConstants.MESSAGE_WRITE, -1, -1, mmBuffer);
-                writtenMsg.sendToTarget();
             } catch (IOException e) {
                 Log.e(TAG, "Error occurred when sending data", e);
 
-                // Send a failure message back to the activity.
-                Message writeErrorMsg =
-                        mHandler.obtainMessage(MessageConstants.MESSAGE_TOAST);
                 Bundle bundle = new Bundle();
                 bundle.putString("toast",
                         "Couldn't send data to the other device");
-                writeErrorMsg.setData(bundle);
-                mHandler.sendMessage(writeErrorMsg);
             }
         }
 
