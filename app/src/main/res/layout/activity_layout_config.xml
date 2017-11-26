@@ -13,6 +13,7 @@
         android:layout_weight="0"
         android:text="@string/edit_layout"
         android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
         android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

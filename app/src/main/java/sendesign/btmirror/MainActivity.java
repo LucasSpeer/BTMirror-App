@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.service.voice.VoiceInteractionSession;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         /*
         From this block comment to the next checks and enable the bluetooth hardware
         and attempts to establish a connection with the smartmirror acting as the host
@@ -101,8 +103,8 @@ public class MainActivity extends AppCompatActivity {
         }
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
-*/
-        /*
+
+        /*center
         end bluetooth connection setup
         below is the basic app functionality code, buttons and status text etc.
          */
