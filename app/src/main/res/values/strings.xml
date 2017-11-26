@@ -2,4 +2,10 @@
     <string name="app_name">BTmirror</string>
     <string name="UUID">a0f220e8-5c47-4200-b9ec-3046b5167ad4</string>
     <string name="confText">Configure</string>
+    <string name="main_menu">Main Menu</string>
+    <string name="edit_layout">Edit Layout</string>
+    <string name="smart_mirror_disconnected">Smart Mirror: Disconnected</string>
+    <string name="back">Back</string>
+    <string name="onoff">On/Off</string>
+    <string name="settingText">Settings</string>
 </resources>

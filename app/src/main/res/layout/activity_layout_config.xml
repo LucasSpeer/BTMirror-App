@@ -3,176 +3,194 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="495dp"
+    android:layout_height="match_parent"
     tools:context="sendesign.btmirror.LayoutConfig">
 
-    <Button
-        android:id="@+id/back"
-        android:layout_width="174dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/constraintLayout"
-        android:layout_width="190dp"
-        android:layout_height="495dp"
-        android:layout_marginStart="190dp"
+    <TextView
+        android:id="@+id/layoutText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="@string/edit_layout"
+        android:textAlignment="center"
+        android:textSize="30sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:context="sendesign.btmirror.LayoutConfig">
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_weight="1"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/LinearR3"
-            android:layout_width="190dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
+            android:id="@+id/linearLayout3"
+            android:layout_width="@dimen/halfwidth"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
             android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutR2">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/R3"
+                android:id="@+id/L1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Right Bottom"
+                android:layout_weight="0"
+                android:paddingTop="50dp"
+                android:text="Left Top"
                 android:textAlignment="center" />
 
             <Spinner
-                android:id="@+id/RS3"
+                android:id="@+id/LS1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_weight="0" />
+
+            <TextView
+                android:id="@+id/L2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingTop="20dp"
+                android:text="Left Middle"
+                android:textAlignment="center" />
+
+            <Spinner
+                android:id="@+id/LS2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0" />
+
+            <TextView
+                android:id="@+id/L3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingTop="20dp"
+                android:text="Left Bottom"
+                android:textAlignment="center" />
+
+            <Spinner
+                android:id="@+id/LS3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/linearLayoutR1"
-            android:layout_width="190dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
+            android:id="@+id/linearLayout2"
+            android:layout_width="@dimen/halfwidth"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/linearLayout3"
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/R1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingTop="50dp"
                 android:text="Right Top"
                 android:textAlignment="center" />
 
             <Spinner
                 android:id="@+id/RS1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/linearLayoutR2"
-            android:layout_width="190dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayoutR1">
+                android:layout_height="wrap_content"
+                android:layout_weight="0" />
 
             <TextView
                 android:id="@+id/R2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingTop="20dp"
                 android:text="Right Middle"
                 android:textAlignment="center" />
 
             <Spinner
                 android:id="@+id/RS2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_weight="0" />
+
+            <TextView
+                android:id="@+id/R3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingTop="20dp"
+                android:text="Right Bottom"
+                android:textAlignment="center" />
+
+            <Spinner
+                android:id="@+id/RS3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/config"
-            android:layout_width="174dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/confText"
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="@dimen/halfwidth"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/LayoutBack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="0"
+                android:text="Back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_weight="0"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            tools:layout_editor_absoluteX="94dp">
 
-    </android.support.constraint.ConstraintLayout>
-
-    <LinearLayout
-        android:id="@+id/Linearl3"
-        android:layout_width="191dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutL2">
-
-        <TextView
-            android:id="@+id/L3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Left Bottom"
-            android:textAlignment="center" />
-
-        <Spinner
-            android:id="@+id/LS3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutL1"
-        android:layout_width="190dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/L1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Left Top"
-            android:textAlignment="center" />
-
-        <Spinner
-            android:id="@+id/LS1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutL2"
-        android:layout_width="190dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutL1">
-
-        <TextView
-            android:id="@+id/L2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Left Middle"
-            android:textAlignment="center" />
-
-        <Spinner
-            android:id="@+id/LS2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
+            <Button
+                android:id="@+id/config"
+                android:layout_width="@dimen/halfwidth"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="0"
+                android:text="@string/confText"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+        </LinearLayout>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

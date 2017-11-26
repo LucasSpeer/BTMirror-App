@@ -24,30 +24,30 @@
             android:id="@+id/Title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Main Menu"
+            android:text="@string/main_menu"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp" />
+            android:layout_height="50dp" />
 
         <Button
             android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="10dp"
-            android:text="Edit Layout" />
+            android:text="@string/edit_layout" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="4dp" />
+            android:layout_height="10dp" />
 
         <Button
             android:id="@+id/settingsButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Settings" />
+            android:text="@string/settings" />
 
         <Space
             android:layout_width="match_parent"
@@ -57,7 +57,7 @@
             android:id="@+id/conStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Smart Mirror: Disconnected"
+            android:text="@string/smart_mirror_disconnected"
             android:textAlignment="center" />
 
     </LinearLayout>

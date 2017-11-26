@@ -12,7 +12,9 @@ import android.service.voice.VoiceInteractionSession;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Adapter;
+import android.widget.Button;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,19 +27,25 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-    String MAC = "";
-    final public UUID uuid = UUID.fromString(getResources().getString(R.string.UUID));
+    public String MAC = "";
+    //final public UUID uuid = UUID.fromString(getResources().getString(R.string.UUID));
     final public BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); //get bluetooth adapter
-    public BluetoothSocket mSocket = null;                                                   //create a new socket
-    public InputStream mmInStream = null;                   //Initialize IO streams
+    public BluetoothSocket mSocket = null;            //create a new socket
+    public InputStream mmInStream = null;             //Initialize IO streams
     public OutputStream mmOutStream = null;
-    byte[] mmBuffer;                                // mmBuffer store for the stream
+    public byte[] mmBuffer;                                  // mmBuffer store for the stream
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (!mBluetoothAdapter.isEnabled()) {          //If bluetooth is not enadbled, enable it
+        /*
+        From this block comment to the next checks and enable the bluetooth hardware
+        and attempts to establish a connection with the smartmirror acting as the host
+        and the phone as the client
+         */
+/*
+        if (!mBluetoothAdapter.isEnabled()) {                                       //If bluetooth is not enadbled, enable it
             mBluetoothAdapter.enable();
         }
 
@@ -46,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
             // There are paired devices. Get the name and address of each paired device.
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress(); // MAC address
+                String deviceHardwareAddress = device.getAddress();                 // MAC address
                 if (deviceName == "SmartMirror") {
                     MAC = deviceHardwareAddress;
                 }
@@ -79,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        InputStream tmpIn = null;
+        InputStream tmpIn = null;               //get the input and output streams required for serial interfacing
         OutputStream tmpOut = null;
         try {
             tmpIn = mSocket.getInputStream();
@@ -91,9 +99,30 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             Log.e(TAG, "Error occurred when creating output stream", e);
         }
-
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
+*/
+        /*
+        end bluetooth connection setup
+        below is the basic app functionality code, buttons and status text etc.
+         */
+        Button layout = (Button)findViewById(R.id.layout);
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LayoutConfig.class);
+                startActivity(intent);
+            }
+        });
+        Button settings = (Button)findViewById(R.id.settingsButton);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Settings.class);
+                startActivity(intent);
+            }
+        });
+
     }
     @Override
             protected void onResume(){
