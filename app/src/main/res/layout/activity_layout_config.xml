@@ -25,7 +25,8 @@
         android:layout_marginTop="40dp"
         android:layout_weight="1"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -41,46 +42,43 @@
                 android:id="@+id/L1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:paddingTop="50dp"
                 android:text="Left Top"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                tools:ignore="HardcodedText" />
 
             <Spinner
                 android:id="@+id/LS1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/L2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:paddingTop="20dp"
                 android:text="Left Middle"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                tools:ignore="HardcodedText" />
 
             <Spinner
                 android:id="@+id/LS2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/L3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:paddingTop="20dp"
                 android:text="Left Bottom"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                tools:ignore="HardcodedText" />
 
             <Spinner
                 android:id="@+id/LS3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
 
@@ -98,46 +96,43 @@
                 android:id="@+id/R1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:paddingTop="50dp"
                 android:text="Right Top"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                tools:ignore="HardcodedText" />
 
             <Spinner
                 android:id="@+id/RS1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/R2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:paddingTop="20dp"
                 android:text="Right Middle"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                tools:ignore="HardcodedText" />
 
             <Spinner
                 android:id="@+id/RS2"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/R3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0"
                 android:paddingTop="20dp"
                 android:text="Right Bottom"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                tools:ignore="HardcodedText" />
 
             <Spinner
                 android:id="@+id/RS3"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0" />
+                android:layout_height="0dp" />
 
         </LinearLayout>
 
@@ -151,7 +146,9 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginRight="8dp"
+        android:baselineAligned="false">
 
         <LinearLayout
             android:layout_width="@dimen/halfwidth"
@@ -169,7 +166,8 @@
                 android:text="Back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="HardcodedText,InefficientWeight,NestedWeights" />
         </LinearLayout>
 
         <LinearLayout
@@ -190,7 +188,8 @@
                 android:layout_weight="0"
                 android:text="@string/confText"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="InefficientWeight,NestedWeights" />
         </LinearLayout>
     </LinearLayout>
 

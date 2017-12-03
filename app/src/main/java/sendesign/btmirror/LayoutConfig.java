@@ -1,5 +1,8 @@
 package sendesign.btmirror;
-
+/*
+    *Layout config activity
+    *TODO - Show current layout. Will need to use Locally stored key value pairs for each location and use the moduleList from string.xml to populate the spinners
+ */
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,7 +15,7 @@ public class LayoutConfig extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout_config);
-        Button back = (Button)findViewById(R.id.LayoutBack);
+        Button back = findViewById(R.id.LayoutBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

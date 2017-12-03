@@ -14,11 +14,11 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         Intent intent = getIntent();
-        String settingTitle = intent.getStringExtra("modSelected");
-        TextView title = (TextView)findViewById(R.id.settingsText);
-        title.setText(settingTitle);
-        Button back = (Button)findViewById(R.id.SettingsBack);
-        back.setOnClickListener(new View.OnClickListener() {
+        String settingTitle = intent.getStringExtra("modSelected");     //Receives the module selected from the ModuleList activity
+        TextView title = findViewById(R.id.settingsText);
+        title.setText(settingTitle);                                           //And sets the title of the activity to the selected module here
+        Button back = findViewById(R.id.SettingsBack);
+        back.setOnClickListener(new View.OnClickListener() {                   //Back button to Return to main menu
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(Settings.this, MainActivity.class);

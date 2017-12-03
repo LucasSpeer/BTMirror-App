@@ -11,23 +11,22 @@ import java.io.OutputStream;
 import java.util.logging.Handler;
 
 /**
- * Created by pook on 11/19/17.
+ * Created by Lucas on 11/19/17.
+ * will eventually handle the data transmission, currently has no use
  */
 
-public class MyBluetoothService {
+class BluetoothHandler {
     private static final String TAG = "MY_APP_DEBUG_TAG";
-    private Handler mHandler; // handler that gets info from Bluetooth service
 
-    public MyBluetoothService(Handler mHandler) {
-        this.mHandler = mHandler;
+    public BluetoothHandler(Handler mHandler) {
     }
 
     // Defines several constants used when transmitting messages between the
     // service and the UI.
     private interface MessageConstants {
-        public static final int MESSAGE_READ = 0;
-        public static final int MESSAGE_WRITE = 1;
-        public static final int MESSAGE_TOAST = 2;
+        int MESSAGE_READ = 0;
+        int MESSAGE_WRITE = 1;
+        int MESSAGE_TOAST = 2;
 
         // ... (Add other message types here as needed.)
     }

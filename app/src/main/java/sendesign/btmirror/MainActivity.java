@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     public String MAC = "";
     //final public UUID uuid = UUID.fromString(getResources().getString(R.string.UUID));
+    @SuppressWarnings("WeakerAccess")
     final public BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); //get bluetooth adapter
     public BluetoothSocket mSocket = null;            //create a new socket
     public InputStream mmInStream = null;             //Initialize IO streams
@@ -43,11 +44,11 @@ public class MainActivity extends AppCompatActivity {
 
         /*
         From this block comment to the next checks and enable the bluetooth hardware
-        and attempts to establish a connection with the smartmirror acting as the host
+        and attempts to establish a connection with the smart mirror acting as the host
         and the phone as the client
          */
 /*
-        if (!mBluetoothAdapter.isEnabled()) {                                       //If bluetooth is not enadbled, enable it
+        if (!mBluetoothAdapter.isEnabled()) {                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
 
@@ -108,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
         end bluetooth connection setup
         below is the basic app functionality code, buttons and status text etc.
          */
-        Button layout = (Button)findViewById(R.id.layout);
+        Button layout = findViewById(R.id.layout);          //Layout config button
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Button settings = (Button)findViewById(R.id.settingsButton);
+        Button settings = findViewById(R.id.settingsButton);        //Configure A module Button
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -129,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
             protected void onResume(){
         super.onResume();
-        if (!mBluetoothAdapter.isEnabled()) {          //If bluetooth is not enadbled, enable it
+        if (!mBluetoothAdapter.isEnabled()) {          //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
 
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    // Call this from the main activity to send data to the remote device.
+    // Call this from the main activity to send data to the remote device - this needs to be moved and modified
     void write(byte[] bytes, OutputStream mmOutStream) {
         try {
             mmOutStream.write(bytes);
