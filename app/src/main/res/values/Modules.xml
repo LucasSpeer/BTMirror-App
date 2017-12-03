@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="greeting">Greeting</string>
+    <string-array name="greeting">
+        <item>Good Morning!</item>
+    </string-array>
     <string name="weather">Weather</string>
     <string name="time">Time</string>
     <string name="news">News</string>

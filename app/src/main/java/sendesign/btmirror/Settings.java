@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class Settings extends AppCompatActivity {
 
@@ -12,6 +13,10 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        Intent intent = getIntent();
+        String settingTitle = intent.getStringExtra("modSelected");
+        TextView title = (TextView)findViewById(R.id.settingsText);
+        title.setText(settingTitle);
         Button back = (Button)findViewById(R.id.SettingsBack);
         back.setOnClickListener(new View.OnClickListener() {
             @Override

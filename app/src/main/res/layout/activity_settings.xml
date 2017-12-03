@@ -57,21 +57,12 @@
             android:id="@+id/settingsText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/settingText"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textSize="30sp" />
 
-        <TextView
-            android:id="@+id/greetingSet"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/greeting"
-            android:textSize="18sp" />
-
         <CheckBox
-            android:id="@+id/greetCheck"
+            android:id="@+id/EnableCheck"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="true"

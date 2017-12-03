@@ -7,5 +7,13 @@
     <string name="smart_mirror_disconnected">Smart Mirror: Disconnected</string>
     <string name="back">Back</string>
     <string name="onoff">On/Off</string>
-    <string name="settingText">Settings</string>
+    <string name="settingText">Configure A Module</string>
+    <string name="modChoose">Choose A Module</string>
+    <string-array name="modules">
+        <item>Greeting</item>
+        <item>Weather</item>
+        <item>Time</item>
+        <item>News</item>
+        <item>Email</item>
+    </string-array>
 </resources>

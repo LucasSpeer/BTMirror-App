@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="halfwidth">185dp</dimen>
+    <dimen name="halfwidth">180dp</dimen>
 </resources>
