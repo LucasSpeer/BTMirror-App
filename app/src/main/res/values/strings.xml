@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">BT SmartMirror</string>
-    <string name="UUID" tools:keep="@string/UUID">a0f220e8–5c47–4200–b9ec–3046b5167ad4</string>
+    <string name="UUID" tools:keep="@string/UUID">A0F220E8-5C47-4200-B9EC-3046b5167AD4</string>
     <string name="confText">Configure</string>
     <string name="main_menu">Main Menu</string>
     <string name="edit_layout">Edit Layout</string>
@@ -9,6 +9,16 @@
     <string name="onoff">On/Off</string>
     <string name="settingText">Configure A Module</string>
     <string name="modChoose">Choose A Module</string>
+    <string name="retry">Retry</string>
+    <string name="deviceList">Devices seen</string>
+    <string name="devlisterror">No Bluetooth devices paired\nGo to device settings to find your mirror</string>
+    <string-array name="ConStatText">
+        <item>Connection Status: </item>
+        <item>Attempting To Connect</item>
+        <item>Successful</item>
+        <item>Failed</item>
+        <item>\nMac Address: </item>
+    </string-array>
     <string-array name="modules">
         <item>Greeting</item>
         <item>Weather</item>

@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.service.voice.VoiceInteractionSession;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,42 +30,88 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-    public String MAC = "";
-    //final public UUID uuid = UUID.fromString(getResources().getString(R.string.UUID));
+    public String MAC = "00:00:00:00:00:00";
+    public UUID uuid = null;
     @SuppressWarnings("WeakerAccess")
-    final public BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter(); //get bluetooth adapter
-    public BluetoothSocket mSocket = null;            //create a new socket
-    public InputStream mmInStream = null;             //Initialize IO streams
+    final public BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();         //get bluetooth adapter
+    public BluetoothSocket mSocket = null;                                                          //create a new socket
+    public InputStream mmInStream = null;                                                           //Initialize IO streams
     public OutputStream mmOutStream = null;
-    public byte[] mmBuffer;                                  // mmBuffer store for the stream
+    public byte[] mmBuffer;                                                                         // mmBuffer store for the stream
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        final Resources resources = getResources();
+        final TextView btStatus = findViewById(R.id.conStatus);
+        final String conStatusText[] = resources.getStringArray(R.array.ConStatText);                     //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
+        final Button layout = findViewById(R.id.layout);                                                  //Layout config button
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, LayoutConfig.class);
+                startActivity(intent);
+            }
+        });
+        Button settings = findViewById(R.id.settingsButton);                                        //Configure A module Button
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ModuleList.class);
+                startActivity(intent);
+            }
+        });
+        final Button retry = findViewById(R.id.retryButton);
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findDevices(btStatus, conStatusText, retry, resources);
+            }
+        });
         /*
         From this block comment to the next checks and enable the bluetooth hardware
         and attempts to establish a connection with the smart mirror acting as the host
         and the phone as the client
          */
-/*
-        if (!mBluetoothAdapter.isEnabled()) {                                       //If bluetooth is not enabled, enable it
+
+        if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-
-        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();  //check if already paired
-        if (pairedDevices.size() > 0) {
-            // There are paired devices. Get the name and address of each paired device.
+        uuid = UUID.fromString(resources.getString(R.string.UUID));
+        findDevices(btStatus, conStatusText, retry, resources);
+    }
+    public void findDevices(TextView btStatus, String conStatusText[], Button retry, Resources resources) {
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();                  //check if already paired
+        TextView deviceList = findViewById(R.id.devList);
+        TextView listTitle = findViewById(R.id.devListTitle);
+        int size = pairedDevices.size();
+        String devStr = "";
+        int i = 0;
+        if (pairedDevices.size() > 0) {                                                             // There are paired devices. Get the name and address of each paired device.
             for (BluetoothDevice device : pairedDevices) {
+                devStr += device.getName() + " - " + device.getAddress() + "\n";
+                i++;
                 String deviceName = device.getName();
-                String deviceHardwareAddress = device.getAddress();                 // MAC address
-                if (deviceName == "SmartMirror") {
-                    MAC = deviceHardwareAddress;
+                if (deviceName == "SmartMirror") {                                                  //Mirror found among paired devices
+                    MAC = device.getAddress();
+                    btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC); //"Connection Status: Successful"
+                                                                                                    //"MAC Address: 'MA:CA:DD:RE:SS:HE:RE"
+                    BTconnect(MAC);
+                    retry.setVisibility(View.INVISIBLE);                                            //Make retry button and list of connected devices invisible
+                    deviceList.setVisibility(View.INVISIBLE);
+                    listTitle.setVisibility(View.INVISIBLE);
+                } else {
+                    btStatus.setText(conStatusText[0] + conStatusText[3]);                          //"Connection Status: Failed"
                 }
             }
+            deviceList.setText(devStr);
         }
-
+        else{
+            deviceList.setText(R.string.devlisterror);                                              //error - no devices found
+        }
+    }
+    public void BTconnect(String MAC) {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
         BluetoothSocket tmp = null;
         try {
@@ -104,28 +152,6 @@ public class MainActivity extends AppCompatActivity {
         }
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
-
-        /*center
-        end bluetooth connection setup
-        below is the basic app functionality code, buttons and status text etc.
-         */
-        Button layout = findViewById(R.id.layout);          //Layout config button
-        layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, LayoutConfig.class);
-                startActivity(intent);
-            }
-        });
-        Button settings = findViewById(R.id.settingsButton);        //Configure A module Button
-        settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ModuleList.class);
-                startActivity(intent);
-            }
-        });
-
     }
     @Override
             protected void onResume(){
