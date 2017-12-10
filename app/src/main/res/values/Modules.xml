@@ -7,4 +7,5 @@
     <string name="time" tools:keep="@string/time">Time</string>
     <string name="news" tools:keep="@string/news">News</string>
     <string name="email" tools:keep="@string/email">Email</string>
+    <integer name="modCount">6</integer>
 </resources>

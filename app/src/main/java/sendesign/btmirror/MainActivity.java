@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.service.voice.VoiceInteractionSession;
 import android.support.v7.app.AppCompatActivity;
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public InputStream mmInStream = null;                                                           //Initialize IO streams
     public OutputStream mmOutStream = null;
     public byte[] mmBuffer;                                                                         // mmBuffer store for the stream
-
+    public boolean googleConnected = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 findDevices(btStatus, conStatusText, retry, resources);
             }
         });
+
         /*
         From this block comment to the next checks and enable the bluetooth hardware
         and attempts to establish a connection with the smart mirror acting as the host

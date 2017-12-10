@@ -51,6 +51,7 @@
                 android:id="@+id/LS1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clipChildren="false"
                 android:entries="@array/modules" />
 
             <TextView
@@ -81,7 +82,8 @@
                 android:id="@+id/LS3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:entries="@array/modules" />
+                android:entries="@array/modules"
+                android:spinnerMode="dropdown" />
 
         </LinearLayout>
 

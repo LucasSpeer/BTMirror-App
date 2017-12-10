@@ -10,8 +10,10 @@
     <string name="settingText">Configure A Module</string>
     <string name="modChoose">Choose A Module</string>
     <string name="retry">Retry</string>
+    <string name="choose">Choose a Module</string>
     <string name="deviceList">Devices seen</string>
     <string name="devlisterror">No Bluetooth devices paired\nGo to device settings to find your mirror</string>
+
     <string-array name="ConStatText">
         <item>Connection Status: </item>
         <item>Attempting To Connect</item>
@@ -20,6 +22,7 @@
         <item>\nMac Address: </item>
     </string-array>
     <string-array name="modules">
+        <item>None</item>
         <item>Greeting</item>
         <item>Weather</item>
         <item>Time</item>
