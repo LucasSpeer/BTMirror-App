@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,50 +14,52 @@ import android.widget.SpinnerAdapter;
 
 import java.lang.reflect.Array;
 import java.net.URL;
+import java.util.Objects;
 
 /**
- * Created by pook on 12/9/17.
+ * Created by Lucas on 12/9/17.
+ * For use with LayoutConfig activity to handle creating of spinner on Item Selected Listeners
  */
 
-public class UpdateSpinners extends IntentService {
+public class UpdateSpinners implements Runnable {
     final Spinner[] spinArr = LayoutConfig.spinArr;
     private String moduleList[] = LayoutConfig.moduleList;
     private int currentLayout[] = LayoutConfig.currentLayout;
-    private int modCount = LayoutConfig.modCount;
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
+    private int modCount = LayoutConfig.modCnt;
+    Context context = null;
+
+    /*
+    this function handles the selection of a new module from a spinner in the LayoutConfig Activity
      */
-    public UpdateSpinners(String name) {
-        super(name);
-    }
     @Override
-    protected void onHandleIntent(@Nullable final Intent intent) {
+    public void run() {
+        android.os.Process.setThreadPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);        //Sends process to background
+
         final AdapterView.OnItemSelectedListener listener = new AdapterView.OnItemSelectedListener() {    //Initialize listener for each spinner
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     String chosenModule = parent.getSelectedItem().toString();
-                    int chosenModInt = 0;
+                    int chosenModInt;
                     int cnt = 0;
                     int newLayout[] = currentLayout;
                     int modUpdating = 0;
-                    intent.getIntExtra("name", modUpdating);
                     for(int i = 0; i < modCount; i++){
-                        if(chosenModule == moduleList[i]){
-                            chosenModInt = i;
-                            newLayout[modUpdating] = chosenModInt;
-                            for(int j = 0; j < modCount; j++){
-                                if(currentLayout[j] == chosenModInt && j != modUpdating){
-                                    newLayout[j] = currentLayout[modUpdating];
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                            if(Objects.equals(chosenModule, moduleList[i])){
+                                chosenModInt = i;
+                                newLayout[modUpdating] = chosenModInt;
+                                for(int j = 0; j < modCount; j++){
+                                    if(currentLayout[j] == chosenModInt && j != modUpdating){
+                                        newLayout[j] = currentLayout[modUpdating];
+                                    }
                                 }
-                            }
 
+                            }
                         }
                     }
 
-                    LayoutConfig.updateLayout(newLayout);
+                    LayoutConfig.updateLayout(newLayout, view.getContext());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

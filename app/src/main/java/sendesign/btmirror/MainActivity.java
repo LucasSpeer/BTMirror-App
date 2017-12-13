@@ -1,5 +1,6 @@
 package sendesign.btmirror;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -10,6 +11,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
 import android.service.voice.VoiceInteractionSession;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
@@ -83,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         uuid = UUID.fromString(resources.getString(R.string.UUID));
         findDevices(btStatus, conStatusText, retry, resources);
     }
+    @SuppressLint("SetTextI18n")
     public void findDevices(TextView btStatus, String conStatusText[], Button retry, Resources resources) {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();                  //check if already paired
         TextView deviceList = findViewById(R.id.devList);
@@ -95,16 +99,18 @@ public class MainActivity extends AppCompatActivity {
                 devStr += device.getName() + " - " + device.getAddress() + "\n";
                 i++;
                 String deviceName = device.getName();
-                if (deviceName == "SmartMirror") {                                                  //Mirror found among paired devices
-                    MAC = device.getAddress();
-                    btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC); //"Connection Status: Successful"
-                                                                                                    //"MAC Address: 'MA:CA:DD:RE:SS:HE:RE"
-                    BTconnect(MAC);
-                    retry.setVisibility(View.INVISIBLE);                                            //Make retry button and list of connected devices invisible
-                    deviceList.setVisibility(View.INVISIBLE);
-                    listTitle.setVisibility(View.INVISIBLE);
-                } else {
-                    btStatus.setText(conStatusText[0] + conStatusText[3]);                          //"Connection Status: Failed"
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if (Objects.equals(deviceName, "SmartMirror")) {                                                  //Mirror found among paired devices
+                        MAC = device.getAddress();
+                        btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC); //"Connection Status: Successful"
+                                                                                                        //"MAC Address: 'MA:CA:DD:RE:SS:HE:RE"
+                        BTconnect(MAC);
+                        retry.setVisibility(View.INVISIBLE);                                            //Make retry button and list of connected devices invisible
+                        deviceList.setVisibility(View.INVISIBLE);
+                        listTitle.setVisibility(View.INVISIBLE);
+                    } else {
+                        btStatus.setText(conStatusText[0] + conStatusText[3]);                          //"Connection Status: Failed"
+                    }
                 }
             }
             deviceList.setText(devStr);
