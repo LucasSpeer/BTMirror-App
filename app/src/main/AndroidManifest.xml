@@ -26,9 +26,6 @@
         <activity
             android:name=".LayoutConfig"
             android:label="LayoutConfig"/>
-        <service
-            android:name=".UpdateSpinners"
-            android:exported="false"/>
         <activity android:name=".ModuleList" />
         <activity android:name=".Settings" />
 

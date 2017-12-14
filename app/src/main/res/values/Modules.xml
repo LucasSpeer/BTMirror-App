@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+    This file holds the array of available modules and an integer for the number of modules
+    modCount is used to dynamically loop through many array (particularly in LayoutConfig.Java) so it must be kept current
+-->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string-array name="greeting" tools:keep="@array/greeting">
         <item>Good Morning!</item>

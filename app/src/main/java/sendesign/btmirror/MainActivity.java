@@ -34,13 +34,13 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-    public String MAC = "00:00:00:00:00:00";
-    public UUID uuid = null;
+    private String MAC = "00:00:00:00:00:00";
+    private UUID uuid = null;
     @SuppressWarnings("WeakerAccess")
     final public BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();         //get bluetooth adapter
-    public BluetoothSocket mSocket = null;                                                          //create a new socket
-    public InputStream mmInStream = null;                                                           //Initialize IO streams
-    public OutputStream mmOutStream = null;
+    private BluetoothSocket mSocket = null;                                                          //create a new socket
+    private InputStream mmInStream = null;                                                           //Initialize IO streams
+    private OutputStream mmOutStream = null;
     public byte[] mmBuffer;                                                                         // mmBuffer store for the stream
     public boolean googleConnected = false;
     @Override
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         findDevices(btStatus, conStatusText, retry, resources);
     }
     @SuppressLint("SetTextI18n")
-    public void findDevices(TextView btStatus, String conStatusText[], Button retry, Resources resources) {
+    private void findDevices(TextView btStatus, String conStatusText[], Button retry, Resources resources) {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();                  //check if already paired
         TextView deviceList = findViewById(R.id.devList);
         TextView listTitle = findViewById(R.id.devListTitle);
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
             deviceList.setText(R.string.devlisterror);                                              //error - no devices found
         }
     }
-    public void BTconnect(String MAC) {
+    private void BTconnect(String MAC) {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
         BluetoothSocket tmp = null;
         try {
