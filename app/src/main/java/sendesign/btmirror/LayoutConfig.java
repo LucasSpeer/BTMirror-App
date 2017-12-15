@@ -41,7 +41,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         Resources resources = getResources();
         modCnt = resources.getInteger(R.integer.modCount);
         firstRunCnt = 0;
-        @SuppressWarnings("UnnecessaryLocalVariable") Spinner spinners[] =                          //initialize spinners (ignore the redundancy warning)
+        @SuppressWarnings("UnnecessaryLocalVariable") Spinner spinners[] =                                             //initialize spinners (ignore the redundancy warning)
                  {findViewById(R.id.LS1), findViewById(R.id.RS1), findViewById(R.id.LS2)
                 , findViewById(R.id.RS2), findViewById(R.id.LS3), findViewById(R.id.RS3)};
         spinArr = spinners;                                                                         //Set global spinner array
@@ -58,7 +58,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         spotsFull = resources.getStringArray(R.array.spotNames);
         setCurrentText();
 
-        final Button back = findViewById(R.id.LayoutBack);                                                //back and config buttons
+        final Button back = findViewById(R.id.LayoutBack);                                          //back and config buttons
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
