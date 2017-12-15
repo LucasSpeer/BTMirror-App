@@ -58,11 +58,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        Button settings = findViewById(R.id.settingsButton);                                        //Configure A module Button
+        Button settings = findViewById(R.id.settingsButton);                                        //Configure Modules Button
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ModuleList.class);
+                Intent intent = new Intent(MainActivity.this, Settings.class);
                 startActivity(intent);
             }
         });

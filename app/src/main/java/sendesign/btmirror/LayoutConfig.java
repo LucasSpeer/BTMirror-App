@@ -31,7 +31,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
     private String spotsFull[] = null;
     private int modCnt = 0;                                                                         //Number of modules, updated dynamically from Modules.xml
     private long ids[];
-    private int firstRunCnt;                                                                    //onItemSelected is triggered the first time each spinner is set, this counter variable works with a loop to counteract that in the onItemSelectedListener
+    private int firstRunCnt;                                                                        //onItemSelected is triggered the first time each spinner is set, this counter variable works with a loop to counteract that in the onItemSelectedListener
     private String currentText;
 
     @Override
@@ -58,7 +58,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         spotsFull = resources.getStringArray(R.array.spotNames);
         setCurrentText();
 
-        Button back = findViewById(R.id.LayoutBack);                                                //back and config buttons
+        final Button back = findViewById(R.id.LayoutBack);                                                //back and config buttons
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,7 +75,8 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
                 Config();
             }
         });
-        long tmpIDarr[] = new long[modCnt];
+
+        long tmpIDarr[] = new long[modCnt];                                                         //Temporary array to get the individual IDs of each spinner to be used in the onItemSelectedListener
         for (int i = 0; i < spinArr.length; i++) {
             spinArr[i].setOnItemSelectedListener(this);
             tmpIDarr[i] = spinArr[i].getId();
@@ -84,6 +85,8 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         setAllSpinners(currentLayout);
 
     }
+
+
     @Override
     protected void onResume(){
         super.onResume();
@@ -94,6 +97,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         }
         currentLayout = savedLayout;
     }
+
     @Override
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {              //Function On spinner clicked and item Selected
         String chosenModule = parent.getSelectedItem().toString();                                  //get String of item selected
@@ -106,20 +110,20 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
                 if (chosenModule == moduleList[i]) {                                                //Compares the string selected to the list of module names
                     chosenModInt = i;
                 }
-                if (ids[i] == parent.getId()) {
+                if (ids[i] == parent.getId()) {                                                     //Compare the id of the Spinner the was selected with the array of spinner IDs to determine which spinner was chosen
                     modUpdatingInt = i;
                     oldMod = newLayout[i];
                 }
             }
-            newLayout[modUpdatingInt] = chosenModInt;                                               //
-            for (int k = 0; k < modCnt; k++) {                                                      //
-                if (currentLayout[k] == chosenModInt && k != modUpdatingInt && chosenModule != moduleList[0]) {                      //
-                    newLayout[k] = oldMod;                                   //
+            newLayout[modUpdatingInt] = chosenModInt;                                               //Update the spot chosen in the temporary layout array
+            for (int k = 0; k < modCnt; k++) {                                                      //Iterate through each spot of the layout(Before the update) and switch any spot that has the same module as the one just selected
+                if (currentLayout[k] == chosenModInt && k != modUpdatingInt && chosenModule != moduleList[0]) {                                 //with the one previously in the spinner that was clicked (unless "none" was selected)
+                    newLayout[k] = oldMod;
                     String newStringArr[] = getStringForSpinArr(k, newLayout);
-                    ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(spinArr[k].getContext(), R.layout.support_simple_spinner_dropdown_item, newStringArr);
+                    ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(spinArr[k].getContext(), R.layout.support_simple_spinner_dropdown_item, newStringArr); //Create a new array adapter for the changed spot
                     spinnerArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     spinArr[k].setAdapter(spinnerArrayAdapter);
-                    firstRunCnt=6;
+                    firstRunCnt=modCnt;                                                             //Not 100% sure this is necessary. Remove at own risk
                 }
             }
             currentLayout = newLayout;
@@ -127,16 +131,25 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         }
         firstRunCnt++;
     }
+
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
+
+    /*
+    Currently unused, resets current layout to the default. Maybe for a button or whatever.
+     */
     private void setDefaultLayout() {                                                               //function to reset layout to defaults (currently unused - todo add a "reset to defaults" button)
         currentLayout = defaultLayout;
     }
+
+    /*
+    A function to set the text containing the SAVED text, called during onCreate() and when Config is clicked
+     */
     private void setCurrentText(){
         TextView currentConf = findViewById(R.id.currentConfig);
         currentText = this.getString(R.string.currentConfig);
-        int odd = 0;
+        int odd = 0;                                                                                //Index that always should = 0 or 1. Used to add spaces after the left side or a new line after the right side's text
         for(int i = 0; i < modCnt; i++){
             currentText += (spotsFull[i] + moduleList[currentLayout[i]]);
             if(odd == 0){
@@ -172,6 +185,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         }
         spinner.setAdapter(spinnerArrayAdapter);
     }
+
     /*
     The purpose of the following function is to create and assign a new array adapter for each spinner based on the selected spinner
     Called from the onItemSelectedListener
@@ -188,12 +202,18 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         }
         return resultArr;
     }
+
+    /*
+    The Config() function is called from the onClickListener of the Configure button
+    Sets the value for the keys defined in spots[], into the default preferences file for this activity see - https://developer.android.com/reference/android/content/SharedPreferences.html
+    Need to add function to send the new layout to the mirror via the bluetooth connection
+     */
     private void Config(){
         SharedPreferences.Editor editor = prefs.edit();
         for(int i = 0; i < modCnt; i++){
             editor.putInt(spots[i], currentLayout[i]);
             editor.apply();
         }
-        setCurrentText();
+        setCurrentText();                                                                           //Updates the containing the saved currentLayout
     }
 }

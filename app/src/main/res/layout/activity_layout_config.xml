@@ -158,47 +158,39 @@
         android:layout_marginRight="8dp"
         android:baselineAligned="false">
 
-        <LinearLayout
-            android:layout_width="@dimen/halfwidth"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:orientation="vertical">
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/ConstraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0">
 
             <Button
                 android:id="@+id/LayoutBack"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="0"
                 android:text="Back"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/constraintLayout"
+                app:layout_constraintEnd_toStartOf="@+id/config"
                 app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="HardcodedText,InefficientWeight,NestedWeights" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_weight="0"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            tools:layout_editor_absoluteX="94dp">
 
             <Button
                 android:id="@+id/config"
-                android:layout_width="@dimen/halfwidth"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="0"
                 android:text="@string/confText"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/LayoutBack"
                 tools:ignore="InefficientWeight,NestedWeights" />
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
+
     </LinearLayout>
 
     <TextView
@@ -208,7 +200,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
