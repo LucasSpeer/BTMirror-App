@@ -13,7 +13,15 @@
     <string name="choose">Choose a Module</string>
     <string name="deviceList">Devices seen</string>
     <string name="devlisterror">No Bluetooth devices paired\nGo to device settings to find your mirror</string>
-
+    <string name="currentConfig">Current Config:\n</string>
+    <string-array name="spotNames">
+        <item>Left Top:</item>
+        <item>Right Tip:</item>
+        <item>Left Middle:</item>
+        <item>Right Middle:</item>
+        <item>Left Bottom:</item>
+        <item>Right Bottom:</item>
+    </string-array>
     <string-array name="ConStatText">
         <item>Connection Status: </item>
         <item>Attempting To Connect</item>
