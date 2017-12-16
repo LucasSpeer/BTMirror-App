@@ -34,23 +34,24 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String MAC = "00:00:00:00:00:00";
-    private UUID uuid = null;
+    public String MAC = "00:00:00:00:00:00";
+    public static UUID uuid = null;
     @SuppressWarnings("WeakerAccess")
-    final public BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();         //get bluetooth adapter
-    private BluetoothSocket mSocket = null;                                                          //create a new socket
-    private InputStream mmInStream = null;                                                           //Initialize IO streams
-    private OutputStream mmOutStream = null;
+    final public static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();         //get bluetooth adapter
+    public static BluetoothSocket mSocket = null;                                                         //create a new socket
+    public static InputStream mmInStream = null;                                                          //Initialize IO streams
+    public static OutputStream mmOutStream = null;
     public byte[] mmBuffer;                                                                         // mmBuffer store for the stream
     public boolean googleConnected = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Resources resources = getResources();
         final TextView btStatus = findViewById(R.id.conStatus);
-        final String conStatusText[] = resources.getStringArray(R.array.ConStatText);                     //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
-        final Button layout = findViewById(R.id.layout);                                                  //Layout config button
+        final String conStatusText[] = resources.getStringArray(R.array.ConStatText);               //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
+        final Button layout = findViewById(R.id.layout);                                            //Layout config button
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +86,10 @@ public class MainActivity extends AppCompatActivity {
         }
         uuid = UUID.fromString(resources.getString(R.string.UUID));
         findDevices(btStatus, conStatusText, retry, resources);
+
+
     }
+
     @SuppressLint("SetTextI18n")
     private void findDevices(TextView btStatus, String conStatusText[], Button retry, Resources resources) {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();                  //check if already paired
@@ -103,35 +107,31 @@ public class MainActivity extends AppCompatActivity {
                     if (Objects.equals(deviceName, "SmartMirror")) {                                                  //Mirror found among paired devices
                         MAC = device.getAddress();
                         btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC); //"Connection Status: Successful"
-                                                                                                        //"MAC Address: 'MA:CA:DD:RE:SS:HE:RE"
+                        //"MAC Address: 'MA:CA:DD:RE:SS:HE:RE"
                         BTconnect(MAC);
-                        retry.setVisibility(View.INVISIBLE);                                            //Make retry button and list of connected devices invisible
+                        retry.setVisibility(View.INVISIBLE);                                        //Make retry button and list of connected devices invisible
                         deviceList.setVisibility(View.INVISIBLE);
                         listTitle.setVisibility(View.INVISIBLE);
                     } else {
-                        btStatus.setText(conStatusText[0] + conStatusText[3]);                          //"Connection Status: Failed"
+                        btStatus.setText(conStatusText[0] + conStatusText[3]);                      //"Connection Status: Failed"
                     }
                 }
             }
             deviceList.setText(devStr);
-        }
-        else{
-            deviceList.setText(R.string.devlisterror);                                              //error - no devices found
+        } else {
+            deviceList.setText(R.string.devlisterror);       //error - no devices found
         }
     }
     private void BTconnect(String MAC) {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
         BluetoothSocket tmp = null;
         try {
-            // Get a BluetoothSocket to connect with the SmartMirror
-            tmp = device.createRfcommSocketToServiceRecord(uuid);
+            tmp = device.createRfcommSocketToServiceRecord(uuid);                                   // Get a BluetoothSocket to connect with the SmartMirror
         } catch (IOException e) {
             Log.e(TAG, "Socket's create() method failed", e);
         }
         mSocket = tmp;
-        // Cancel discovery because it otherwise slows down the connection.
-        mBluetoothAdapter.cancelDiscovery();
-
+        mBluetoothAdapter.cancelDiscovery();                                                        // Cancel discovery because it otherwise slows down the connection
         try {
             // Connect to the remote device through the socket. This call blocks
             // until it succeeds or throws an exception.
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        InputStream tmpIn = null;               //get the input and output streams required for serial interfacing
+        InputStream tmpIn = null;                                                                   //get the input and output streams required for serial interfacing
         OutputStream tmpOut = null;
         try {
             tmpIn = mSocket.getInputStream();
@@ -160,24 +160,15 @@ public class MainActivity extends AppCompatActivity {
         }
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
+
     }
+
     @Override
-            protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        if (!mBluetoothAdapter.isEnabled()) {          //If bluetooth is not enabled, enable it
+        if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
 
-    }
-
-
-
-    // Call this from the main activity to send data to the remote device - this needs to be moved and modified
-    void write(byte[] bytes, OutputStream mmOutStream) {
-        try {
-            mmOutStream.write(bytes);
-        } catch (IOException e) {
-            Log.e(TAG, "Error occurred when sending data", e);
-        }
     }
 }

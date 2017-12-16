@@ -169,6 +169,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
             setSpinner(spinArr[i], layout[i]);
         }
     }
+
     /*
         setSpinner(...) configures a single spinner(called spinner), chosenModule is the of chosen module IDs (0-6), spotChanging is an integer to represent the position changing (spots[spotChanging])
      */
