@@ -27,7 +27,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
     private int currentLayout[] = null;                                                             //Integer Array to hold current Layout
     private Spinner spinArr[] = null;                                                               //Lets us globally reference each spinner by its location (TL=0, TR=1, ML=2, MR=3,...)
     private String moduleList[] = null;                                                             //the integer held in the layout arrays correspond to the position in this array of strings containing the list of modules, populated from strings.xml
-    final private String spots[] = {"l1", "r1", "l2", "r2", "l3", "r3" };                           //strings for use as keys with savedPreferences
+    final private String spots[] = {"l1", "r1", "l2", "r2", "l3", "r3"};                           //strings for use as keys with savedPreferences
     private String spotsFull[] = null;
     private int modCnt = 0;                                                                         //Number of modules, updated dynamically from Modules.xml
     private long ids[];
@@ -42,8 +42,8 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         modCnt = resources.getInteger(R.integer.modCount);
         firstRunCnt = 0;
         @SuppressWarnings("UnnecessaryLocalVariable") Spinner spinners[] =                                             //initialize spinners (ignore the redundancy warning)
-                 {findViewById(R.id.LS1), findViewById(R.id.RS1), findViewById(R.id.LS2)
-                , findViewById(R.id.RS2), findViewById(R.id.LS3), findViewById(R.id.RS3)};
+                {findViewById(R.id.LS1), findViewById(R.id.RS1), findViewById(R.id.LS2)
+                        , findViewById(R.id.RS2), findViewById(R.id.LS3), findViewById(R.id.RS3)};
         spinArr = spinners;                                                                         //Set global spinner array
 
 
@@ -88,7 +88,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
 
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         firstRunCnt = 0;
         int savedLayout[] = defaultLayout;
@@ -123,7 +123,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
                     ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(spinArr[k].getContext(), R.layout.support_simple_spinner_dropdown_item, newStringArr); //Create a new array adapter for the changed spot
                     spinnerArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     spinArr[k].setAdapter(spinnerArrayAdapter);
-                    firstRunCnt=modCnt;                                                             //Not 100% sure this is necessary. Remove at own risk
+                    firstRunCnt = modCnt;                                                             //Not 100% sure this is necessary. Remove at own risk
                 }
             }
             currentLayout = newLayout;
@@ -146,17 +146,16 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
     /*
     A function to set the text containing the SAVED text, called during onCreate() and when Config is clicked
      */
-    private void setCurrentText(){
+    private void setCurrentText() {
         TextView currentConf = findViewById(R.id.currentConfig);
         currentText = this.getString(R.string.currentConfig);
         int odd = 0;                                                                                //Index that always should = 0 or 1. Used to add spaces after the left side or a new line after the right side's text
-        for(int i = 0; i < modCnt; i++){
+        for (int i = 0; i < modCnt; i++) {
             currentText += (spotsFull[i] + moduleList[currentLayout[i]]);
-            if(odd == 0){
+            if (odd == 0) {
                 currentText += "   ";
                 odd++;
-            }
-            else{
+            } else {
                 currentText += "\n";
                 odd = 0;
             }
@@ -209,12 +208,24 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
     Sets the value for the keys defined in spots[], into the default preferences file for this activity see - https://developer.android.com/reference/android/content/SharedPreferences.html
     Need to add function to send the new layout to the mirror via the bluetooth connection
      */
-    private void Config(){
+    private void Config() {
         SharedPreferences.Editor editor = prefs.edit();
-        for(int i = 0; i < modCnt; i++){
+        for (int i = 0; i < modCnt; i++) {
             editor.putInt(spots[i], currentLayout[i]);
             editor.apply();
         }
         setCurrentText();                                                                           //Updates the containing the saved currentLayout
+        String data = "";
+        for(int i = 0; i < currentLayout.length; i++){
+            data += (spots[i] + "," + currentLayout[i]);
+            if(i != currentLayout.length - 1){
+                data += "\n";
+            }
+        }
+        byte dataByte[] = data.getBytes();
+        BluetoothHandler btHandler = new BluetoothHandler();
+        Intent intent = new Intent(LayoutConfig.this, BluetoothHandler.class);
+        intent.putExtra("data", dataByte);
+        startService(intent);
     }
 }

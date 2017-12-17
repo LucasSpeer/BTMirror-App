@@ -34,7 +34,7 @@ import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-    public String MAC = "00:00:00:00:00:00";
+    public static String MAC;
     public static UUID uuid = null;
     @SuppressWarnings("WeakerAccess")
     final public static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();         //get bluetooth adapter
@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
         if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-        uuid = UUID.fromString(resources.getString(R.string.UUID));
+        String uuidStr = resources.getString(R.string.UUID);
+        uuid = UUID.fromString(uuidStr);
         findDevices(btStatus, conStatusText, retry, resources);
 
 

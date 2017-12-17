@@ -11,6 +11,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +22,7 @@ import static android.content.ContentValues.TAG;
 
 /**
  * Created by Lucas on 11/19/17.
- * will eventually handle the data transmission, currently has no use
+ * handles the data transmission
  */
 
 public class BluetoothHandler extends Service{
@@ -29,16 +30,27 @@ public class BluetoothHandler extends Service{
     private static final int PERIOD=5000;
     private View root=null;
 
-    final private BluetoothAdapter mBluetoothAdapter = MainActivity.mBluetoothAdapter;
-    private BluetoothSocket mSocket = MainActivity.mSocket;
-    private InputStream mmInStream = MainActivity.mmInStream;
-    private static OutputStream mmOutStream = MainActivity.mmOutStream;
+    final private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    private BluetoothSocket mSocket;
+    private InputStream mmInStream;
+    private static OutputStream mmOutStream;
     private byte[] mmBuffer; // mmBuffer store for the stream
+    private byte[] dataToWrite;
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        run();
+        dataToWrite = intent.getByteArrayExtra("data");
+        BTconnect(MainActivity.MAC);
+        try {
+            mmOutStream = mSocket.getOutputStream();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        if(mSocket.isConnected()){
+            run();
+        }
+
         return (START_NOT_STICKY);
     }
     @Override
@@ -52,19 +64,7 @@ public class BluetoothHandler extends Service{
 
 
     public void run() {
-        mmBuffer = new byte[1024];
-        int numBytes; // bytes returned from read()
-
-        // Keep listening to the InputStream until an exception occurs.
-        while (true) {
-            try {
-                // Read from the InputStream.
-                numBytes = mmInStream.read(mmBuffer);
-            } catch (IOException e) {
-                Log.d(TAG, "Input stream was disconnected", e);
-                break;
-            }
-        }
+        write(dataToWrite);
     }
 
     // Call this from the main activity to send data to the remote device.
@@ -87,5 +87,45 @@ public class BluetoothHandler extends Service{
         } catch (IOException e) {
             Log.e(TAG, "Could not close the connect socket", e);
         }
+    }
+    private void BTconnect(String MAC) {
+        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
+        BluetoothSocket tmp = null;
+        try {
+            tmp = device.createRfcommSocketToServiceRecord(MainActivity.uuid);                                   // Get a BluetoothSocket to connect with the SmartMirror
+        } catch (IOException e) {
+            Log.e(TAG, "Socket's create() method failed", e);
+        }
+        mSocket = tmp;
+        mBluetoothAdapter.cancelDiscovery();                                                        // Cancel discovery because it otherwise slows down the connection
+        try {
+            // Connect to the remote device through the socket. This call blocks
+            // until it succeeds or throws an exception.
+            mSocket.connect();
+        } catch (IOException connectException) {
+            // Unable to connect; close the socket and return.
+            try {
+                mSocket.close();
+            } catch (IOException closeException) {
+                Log.e(TAG, "Could not close the client socket", closeException);
+            }
+            return;
+        }
+
+        InputStream tmpIn = null;                                                                   //get the input and output streams required for serial interfacing
+        OutputStream tmpOut = null;
+        try {
+            tmpIn = mSocket.getInputStream();
+        } catch (IOException e) {
+            Log.e(TAG, "Error occurred when creating input stream", e);
+        }
+        try {
+            tmpOut = mSocket.getOutputStream();
+        } catch (IOException e) {
+            Log.e(TAG, "Error occurred when creating output stream", e);
+        }
+        mmInStream = tmpIn;
+        mmOutStream = tmpOut;
+
     }
 }
