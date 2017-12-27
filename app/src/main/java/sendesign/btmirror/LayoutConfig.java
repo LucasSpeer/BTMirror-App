@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class LayoutConfig extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -33,12 +34,13 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
     private long ids[];
     private int firstRunCnt;                                                                        //onItemSelected is triggered the first time each spinner is set, this counter variable works with a loop to counteract that in the onItemSelectedListener
     private String currentText;
+    private Resources resources = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_layout_config);
-        Resources resources = getResources();
+        resources = getResources();
         modCnt = resources.getInteger(R.integer.modCount);
         firstRunCnt = 0;
         @SuppressWarnings("UnnecessaryLocalVariable") Spinner spinners[] =                                             //initialize spinners (ignore the redundancy warning)
@@ -215,17 +217,21 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
             editor.apply();
         }
         setCurrentText();                                                                           //Updates the containing the saved currentLayout
-        String data = "";
+        String data = "{\n";
         for(int i = 0; i < currentLayout.length; i++){
-            data += (spots[i] + "," + currentLayout[i]);
-            if(i != currentLayout.length - 1){
-                data += "\n";
-            }
+            data += (spots[i] + " = " + currentLayout[i] + "\n");
         }
-        byte dataByte[] = data.getBytes();
-        BluetoothHandler btHandler = new BluetoothHandler();
-        Intent intent = new Intent(LayoutConfig.this, BluetoothHandler.class);
-        intent.putExtra("data", dataByte);
-        startService(intent);
+        data += "}";
+        if(MainActivity.BTFound) {
+            byte dataByte[] = data.getBytes();
+            BluetoothHandler btHandler = new BluetoothHandler();
+            Intent intent = new Intent(LayoutConfig.this, BluetoothHandler.class);
+            intent.putExtra("data", dataByte);
+            startService(intent);
+            Toast.makeText(this, resources.getText(R.string.yesBT), Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this, resources.getText(R.string.noBT), Toast.LENGTH_SHORT).show();
+        }
     }
 }

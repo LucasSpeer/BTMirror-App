@@ -21,6 +21,8 @@
     <string name="zip">Zipcode - Currently:</string>
     <string name="noChangesText">has no options</string>
     <string name="enterZip">Enter a new 5-Digit Zipcode:</string>
+    <string name="noBT">Not Connected, Saved Locally</string>
+    <string name="yesBT">Applied</string>
     <string-array name="spotNames">
         <item>Left Top:</item>
         <item>Right Tip:</item>
@@ -32,9 +34,10 @@
     <string-array name="ConStatText">
         <item>Connection Status: </item>
         <item>Attempting To Connect</item>
-        <item>Successful</item>
+        <item>Succes</item>
         <item>Failed</item>
         <item>\nMac Address: </item>
+        <item>Paired, not Connected</item>
     </string-array>
     <string-array name="modules">
         <item>None</item>

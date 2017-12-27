@@ -12,6 +12,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 /*
     Author: Lucas
     Settings Activity
@@ -29,12 +31,14 @@ public class Settings extends AppCompatActivity {
     public Boolean savedOptions[] = null;
     private CheckBox boxArr[];
     private int optionCount = 4;                                                                    //For indexing through Shared Preferences
+    private Resources resources = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_settings);
         Intent intent = getIntent();
-        Resources resources = getResources();
+        resources = getResources();
         prefs = this.getPreferences(Context.MODE_PRIVATE);                                          //retrieve default preference file for storing layout as key value pairs {(string) "L1", (int)1}
         editor = prefs.edit();
         savedOptions = defaults;
@@ -152,6 +156,23 @@ public class Settings extends AppCompatActivity {
         if (currentOptions[0]){                                                                     //If zipcode has been given, store it
             editor.putString("zipcode", zipcode);
             editor.apply();
+        }
+        String data = "{\n";
+        data += ("zipcode," + zipcode + "\n");
+        for(int i = 0; i < optionCount; i++){
+            data += (options[i] + " = " + savedOptions[i].toString() + "\n");
+        }
+        data += "}";
+        if(MainActivity.BTFound) {
+            byte dataByte[] = data.getBytes();
+            BluetoothHandler btHandler = new BluetoothHandler();
+            Intent intent = new Intent(Settings.this, BluetoothHandler.class);
+            intent.putExtra("data", dataByte);
+            startService(intent);
+            Toast.makeText(this, resources.getText(R.string.yesBT), Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(this, resources.getText(R.string.noBT), Toast.LENGTH_SHORT).show();
         }
     }
 }

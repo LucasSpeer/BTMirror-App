@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public static BluetoothSocket mSocket = null;                                                         //create a new socket
     public static InputStream mmInStream = null;                                                          //Initialize IO streams
     public static OutputStream mmOutStream = null;
+    public static Boolean BTFound = false;
     public byte[] mmBuffer;                                                                         // mmBuffer store for the stream
     public boolean googleConnected = false;
 
@@ -110,9 +111,17 @@ public class MainActivity extends AppCompatActivity {
                         btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC); //"Connection Status: Successful"
                         //"MAC Address: 'MA:CA:DD:RE:SS:HE:RE"
                         BTconnect(MAC);
-                        retry.setVisibility(View.INVISIBLE);                                        //Make retry button and list of connected devices invisible
+                        if(!mSocket.isConnected()) {
+                            btStatus.setText(conStatusText[0] + conStatusText[5] + conStatusText[4] + MAC);//"Connection Status: Paired, not Connected"
+                            BTFound = false;
+                        }
+                        else {
+                            retry.setVisibility(View.INVISIBLE);                                        //Make retry button and list of connected devices invisible
+                            BTFound = true;
+                        }
                         deviceList.setVisibility(View.INVISIBLE);
                         listTitle.setVisibility(View.INVISIBLE);
+
                     } else {
                         btStatus.setText(conStatusText[0] + conStatusText[3]);                      //"Connection Status: Failed"
                     }
