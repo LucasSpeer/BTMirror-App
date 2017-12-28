@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.ParcelUuid;
 import android.service.voice.VoiceInteractionSession;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,10 +23,13 @@ import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.net.ServerSocket;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -44,12 +48,15 @@ public class MainActivity extends AppCompatActivity {
     public static Boolean BTFound = false;
     public byte[] mmBuffer;                                                                         // mmBuffer store for the stream
     public boolean googleConnected = false;
-
+    public static BluetoothServerSocket serverSocket;
+    public BluetoothHandler BTHandler;
+    private static Resources resources;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        final Resources resources = getResources();
+        final Resources res = getResources();
+        resources = res;
         final TextView btStatus = findViewById(R.id.conStatus);
         final String conStatusText[] = resources.getStringArray(R.array.ConStatText);               //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
         final Button layout = findViewById(R.id.layout);                                            //Layout config button
@@ -72,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                findDevices(btStatus, conStatusText, retry, resources);
+                if(BTFound && BTHandler.isConnected()){
+                    btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC);
+                }
             }
         });
 
@@ -85,11 +94,19 @@ public class MainActivity extends AppCompatActivity {
         if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-        String uuidStr = resources.getString(R.string.UUID);
-        uuid = UUID.fromString(uuidStr);
+        uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+        try {
+            serverSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("SmartMirror", uuid);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         findDevices(btStatus, conStatusText, retry, resources);
-
-
+        BTHandler = new BluetoothHandler();
+        if (BTHandler.isConnected()){
+            btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC);//"Connection Status: Successful"
+        }
+        mmOutStream = BluetoothHandler.mmOutStream;
+        mmInStream = BluetoothHandler.mmInStream;
     }
 
     @SuppressLint("SetTextI18n")
@@ -106,24 +123,17 @@ public class MainActivity extends AppCompatActivity {
                 i++;
                 String deviceName = device.getName();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    if (Objects.equals(deviceName, "SmartMirror")) {                                                  //Mirror found among paired devices
+                    if (Objects.equals(deviceName, "SmartMirror")) {                             //Mirror found among paired devices
                         MAC = device.getAddress();
-                        btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC); //"Connection Status: Successful"
-                        //"MAC Address: 'MA:CA:DD:RE:SS:HE:RE"
-                        BTconnect(MAC);
-                        if(!mSocket.isConnected()) {
-                            btStatus.setText(conStatusText[0] + conStatusText[5] + conStatusText[4] + MAC);//"Connection Status: Paired, not Connected"
-                            BTFound = false;
-                        }
-                        else {
-                            retry.setVisibility(View.INVISIBLE);                                        //Make retry button and list of connected devices invisible
-                            BTFound = true;
-                        }
+                        BTFound = true;
+                        ParcelUuid uuidparcel[] = device.getUuids();
+                        btStatus.setText(conStatusText[0] + conStatusText[5] + conStatusText[4] + MAC);//"Connection Status: Paired, Listening"
+                        //retry.setVisibility(View.INVISIBLE);                                        //Make retry button and list of connected devices invisible
                         deviceList.setVisibility(View.INVISIBLE);
                         listTitle.setVisibility(View.INVISIBLE);
 
                     } else {
-                        btStatus.setText(conStatusText[0] + conStatusText[3]);                      //"Connection Status: Failed"
+                        btStatus.setText(conStatusText[0] + conStatusText[3]);                      //"Connection Status: Not Paired"
                     }
                 }
             }
@@ -131,46 +141,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             deviceList.setText(R.string.devlisterror);       //error - no devices found
         }
-    }
-    private void BTconnect(String MAC) {
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
-        BluetoothSocket tmp = null;
-        try {
-            tmp = device.createRfcommSocketToServiceRecord(uuid);                                   // Get a BluetoothSocket to connect with the SmartMirror
-        } catch (IOException e) {
-            Log.e(TAG, "Socket's create() method failed", e);
-        }
-        mSocket = tmp;
-        mBluetoothAdapter.cancelDiscovery();                                                        // Cancel discovery because it otherwise slows down the connection
-        try {
-            // Connect to the remote device through the socket. This call blocks
-            // until it succeeds or throws an exception.
-            mSocket.connect();
-        } catch (IOException connectException) {
-            // Unable to connect; close the socket and return.
-            try {
-                mSocket.close();
-            } catch (IOException closeException) {
-                Log.e(TAG, "Could not close the client socket", closeException);
-            }
-            return;
-        }
-
-        InputStream tmpIn = null;                                                                   //get the input and output streams required for serial interfacing
-        OutputStream tmpOut = null;
-        try {
-            tmpIn = mSocket.getInputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "Error occurred when creating input stream", e);
-        }
-        try {
-            tmpOut = mSocket.getOutputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "Error occurred when creating output stream", e);
-        }
-        mmInStream = tmpIn;
-        mmOutStream = tmpOut;
-
     }
 
     @Override

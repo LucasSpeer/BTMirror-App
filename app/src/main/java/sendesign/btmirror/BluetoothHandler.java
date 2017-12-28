@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +17,10 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
 import java.util.logging.Handler;
 
 import static android.content.ContentValues.TAG;
-
 /**
  * Created by Lucas on 11/19/17.
  * handles the data transmission
@@ -31,9 +32,9 @@ public class BluetoothHandler extends Service{
     private View root=null;
 
     final private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private BluetoothSocket mSocket;
-    private InputStream mmInStream;
-    private static OutputStream mmOutStream;
+    public static BluetoothSocket mSocket;
+    public static InputStream mmInStream;
+    public static OutputStream mmOutStream;
     private byte[] mmBuffer; // mmBuffer store for the stream
     private byte[] dataToWrite;
 
@@ -41,13 +42,19 @@ public class BluetoothHandler extends Service{
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         dataToWrite = intent.getByteArrayExtra("data");
-        BTconnect(MainActivity.MAC);
+        try {
+            mSocket = MainActivity.serverSocket.accept();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try {
             mmOutStream = mSocket.getOutputStream();
+            mmInStream = mSocket.getInputStream();
         } catch (IOException e){
             e.printStackTrace();
         }
         if(mSocket.isConnected()){
+            MainActivity.BTFound = true;
             run();
         }
 
@@ -64,7 +71,17 @@ public class BluetoothHandler extends Service{
 
 
     public void run() {
-        write(dataToWrite);
+        byte[] buffer = new byte[1024];
+        while (!Thread.interrupted()) {
+            int bytesRead = 0;
+            try {
+                bytesRead = mmInStream.read(buffer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            byte[] message = new byte[bytesRead];
+            Toast.makeText(this, message.toString(), Toast.LENGTH_SHORT).show();
+        }
     }
 
     // Call this from the main activity to send data to the remote device.
@@ -88,7 +105,7 @@ public class BluetoothHandler extends Service{
             Log.e(TAG, "Could not close the connect socket", e);
         }
     }
-    private void BTconnect(String MAC) {
+    public void BTconnect(String MAC) {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(MAC);
         BluetoothSocket tmp = null;
         try {
@@ -127,5 +144,17 @@ public class BluetoothHandler extends Service{
         mmInStream = tmpIn;
         mmOutStream = tmpOut;
 
+    }
+    public Boolean isConnected(){
+        BTconnect(MainActivity.MAC);
+        if(mSocket.isConnected()){
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    public static BluetoothSocket getmSocket(){
+        return mSocket;
     }
 }

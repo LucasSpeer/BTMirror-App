@@ -6,6 +6,7 @@ package sendesign.btmirror;
     * 2 buttons, back(to main menu), and config(set chosen lay)
     * SharedPreference file to store key value pairs locally
  */
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,9 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.IOException;
+import java.io.OutputStream;
 
 
 public class LayoutConfig extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -35,6 +39,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
     private int firstRunCnt;                                                                        //onItemSelected is triggered the first time each spinner is set, this counter variable works with a loop to counteract that in the onItemSelectedListener
     private String currentText;
     private Resources resources = null;
+    private BluetoothSocket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -224,10 +229,12 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         data += "}";
         if(MainActivity.BTFound) {
             byte dataByte[] = data.getBytes();
-            BluetoothHandler btHandler = new BluetoothHandler();
-            Intent intent = new Intent(LayoutConfig.this, BluetoothHandler.class);
-            intent.putExtra("data", dataByte);
-            startService(intent);
+            OutputStream mOutputStream = MainActivity.mmOutStream;
+            try {
+                mOutputStream.write(dataByte);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             Toast.makeText(this, resources.getText(R.string.yesBT), Toast.LENGTH_SHORT).show();
         }
         else{

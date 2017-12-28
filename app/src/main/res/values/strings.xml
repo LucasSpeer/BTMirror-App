@@ -35,9 +35,9 @@
         <item>Connection Status: </item>
         <item>Attempting To Connect</item>
         <item>Succes</item>
-        <item>Failed</item>
+        <item>Not Paired</item>
         <item>\nMac Address: </item>
-        <item>Paired, not Connected</item>
+        <item>Paired, Listening</item>
     </string-array>
     <string-array name="modules">
         <item>None</item>

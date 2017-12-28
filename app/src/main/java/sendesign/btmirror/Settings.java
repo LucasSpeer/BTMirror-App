@@ -165,10 +165,8 @@ public class Settings extends AppCompatActivity {
         data += "}";
         if(MainActivity.BTFound) {
             byte dataByte[] = data.getBytes();
-            BluetoothHandler btHandler = new BluetoothHandler();
-            Intent intent = new Intent(Settings.this, BluetoothHandler.class);
-            intent.putExtra("data", dataByte);
-            startService(intent);
+            BluetoothHandler.write(dataByte);
+
             Toast.makeText(this, resources.getText(R.string.yesBT), Toast.LENGTH_SHORT).show();
         }
         else{
