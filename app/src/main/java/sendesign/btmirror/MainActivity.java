@@ -5,7 +5,10 @@ import android.app.IntentService;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -27,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressWarnings("WeakerAccess")
     public static BluetoothAdapter mBluetoothAdapter;
     private BluetoothDevice BTdevice;
-    public static InputStream mmInStream = null;                                                          //Initialize IO streams
+    public static InputStream mmInStream = null;                                                    //Initialize IO streams
     public static OutputStream mmOutStream = null;
     public static Boolean BTFound = false;
     public static String BTStatus;
@@ -63,17 +66,13 @@ public class MainActivity extends AppCompatActivity {
         and attempts to establish a connection with the smart mirror acting as the host
         and the phone as the client
          */
-        mBluetoothAdapter  = BluetoothAdapter.getDefaultAdapter();         //get bluetooth adapter
+        mBluetoothAdapter  = BluetoothAdapter.getDefaultAdapter();                                  //get bluetooth adapter
         if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
         uuid = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
         final Button retry = findViewById(R.id.retryButton);
         findDevices(btStatus, conStatusText, retry, resources);
-        if(BTStatus.equals("paired")){
-            BluetoothHandler BThandler = new BluetoothHandler(BTdevice);
-        }
-
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,6 +84,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         updateStatus(conStatusText, btStatus);
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateStatus(conStatusText, btStatus);
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("update");
+        registerReceiver(receiver, filter);
     }
 
     @SuppressLint("SetTextI18n")
@@ -129,6 +137,7 @@ public class MainActivity extends AppCompatActivity {
         final String conStatusText[] = resources.getStringArray(R.array.ConStatText);
         updateStatus(conStatusText, btStatus);
     }
+
     private void updateStatus(String conStatusText[], TextView btStatus){
         String statusText;
         if(BTStatus.equals("paired")){

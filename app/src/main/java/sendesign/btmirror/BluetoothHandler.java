@@ -6,9 +6,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.content.BroadcastReceiver;
+import android.os.Bundle;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.IBinder;
+import java.util.Objects;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -65,12 +68,14 @@ public class BluetoothHandler extends Thread{
             Log.e(TAG, "Socket's create() method failed", e);
         }
         mmSocket = tmp;
+
     }
 
     public void run() {
         // Cancel discovery because it otherwise slows down the connection.
         mBluetoothAdapter.cancelDiscovery();
-
+        Intent intent = new Intent();
+        intent.setAction("update");
         try {
             // Connect to the remote device through the socket. This call blocks
             // until it succeeds or throws an exception.
@@ -87,6 +92,7 @@ public class BluetoothHandler extends Thread{
         if(mmSocket.isConnected()){
             new ConnectedThread(mmSocket);
         }
+
     }
 
     // Closes the client socket and causes the thread to finish.

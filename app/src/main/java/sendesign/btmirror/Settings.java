@@ -82,7 +82,7 @@ public class Settings extends AppCompatActivity {
         CheckBox celsius = findViewById(R.id.useCelCheck);
         celsius.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {            //On state change
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {                              //On state change
                 if(isChecked){                                                                      //if box is now checked
                     currentOptions[1] = true;                                                       //set appropriate boolean
                 }
