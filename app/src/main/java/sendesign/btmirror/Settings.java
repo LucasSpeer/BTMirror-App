@@ -14,6 +14,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+
+import static sendesign.btmirror.MainActivity.mmOutStream;
+
 /*
     Author: Lucas
     Settings Activity
@@ -165,7 +169,11 @@ public class Settings extends AppCompatActivity {
         data += "}";
         if(MainActivity.BTFound) {
             byte dataByte[] = data.getBytes();
-            BluetoothHandler.write(dataByte);
+            try {
+                mmOutStream.write(dataByte);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             Toast.makeText(this, resources.getText(R.string.yesBT), Toast.LENGTH_SHORT).show();
         }

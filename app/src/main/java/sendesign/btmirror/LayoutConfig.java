@@ -39,7 +39,6 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
     private int firstRunCnt;                                                                        //onItemSelected is triggered the first time each spinner is set, this counter variable works with a loop to counteract that in the onItemSelectedListener
     private String currentText;
     private Resources resources = null;
-    private BluetoothSocket mSocket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +51,6 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
                 {findViewById(R.id.LS1), findViewById(R.id.RS1), findViewById(R.id.LS2)
                         , findViewById(R.id.RS2), findViewById(R.id.LS3), findViewById(R.id.RS3)};
         spinArr = spinners;                                                                         //Set global spinner array
-
 
         prefs = LayoutConfig.this.getPreferences(Context.MODE_PRIVATE);                             //retrieve default preference file for storing layout as key value pairs {(string) "L1", (int)1}
         moduleList = resources.getStringArray(R.array.modules);                                     //Populate global module string array moduleList with the values from strings.xml modules[] =  {None, Greeting, Weather, Time, News, Email}

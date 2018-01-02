@@ -1,56 +1,38 @@
 package sendesign.btmirror;
 
 import android.annotation.SuppressLint;
+import android.app.IntentService;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.ParcelUuid;
-import android.service.voice.VoiceInteractionSession;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.Button;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
-import java.net.ServerSocket;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
-
-import static android.content.ContentValues.TAG;
-
 public class MainActivity extends AppCompatActivity {
 
     public static String MAC;
     public static UUID uuid = null;
     @SuppressWarnings("WeakerAccess")
-    final public static BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();         //get bluetooth adapter
-    public static BluetoothSocket mSocket = null;                                                         //create a new socket
+    public static BluetoothAdapter mBluetoothAdapter;
+    private BluetoothDevice BTdevice;
     public static InputStream mmInStream = null;                                                          //Initialize IO streams
     public static OutputStream mmOutStream = null;
     public static Boolean BTFound = false;
-    public byte[] mmBuffer;                                                                         // mmBuffer store for the stream
-    public boolean googleConnected = false;
-    public static BluetoothServerSocket serverSocket;
+    public static String BTStatus;
     public BluetoothHandler BTHandler;
-    private static Resources resources;
+    private Resources resources;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,38 +57,34 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        final Button retry = findViewById(R.id.retryButton);
-        retry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(BTFound && BTHandler.isConnected()){
-                    btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC);
-                }
-            }
-        });
 
         /*
         From this block comment to the next checks and enable the bluetooth hardware
         and attempts to establish a connection with the smart mirror acting as the host
         and the phone as the client
          */
-
+        mBluetoothAdapter  = BluetoothAdapter.getDefaultAdapter();         //get bluetooth adapter
         if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-        uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-        try {
-            serverSocket = mBluetoothAdapter.listenUsingRfcommWithServiceRecord("SmartMirror", uuid);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        uuid = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
+        final Button retry = findViewById(R.id.retryButton);
         findDevices(btStatus, conStatusText, retry, resources);
-        BTHandler = new BluetoothHandler();
-        if (BTHandler.isConnected()){
-            btStatus.setText(conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC);//"Connection Status: Successful"
+        if(BTStatus.equals("paired")){
+            BluetoothHandler BThandler = new BluetoothHandler(BTdevice);
         }
-        mmOutStream = BluetoothHandler.mmOutStream;
-        mmInStream = BluetoothHandler.mmInStream;
+
+        retry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                updateStatus(conStatusText, btStatus);
+                if(!BTStatus.equals("connected")){
+                    BTHandler = new BluetoothHandler(BTdevice);
+                }
+                updateStatus(conStatusText, btStatus);
+            }
+        });
+        updateStatus(conStatusText, btStatus);
     }
 
     @SuppressLint("SetTextI18n")
@@ -125,15 +103,13 @@ public class MainActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     if (Objects.equals(deviceName, "SmartMirror")) {                             //Mirror found among paired devices
                         MAC = device.getAddress();
-                        BTFound = true;
-                        ParcelUuid uuidparcel[] = device.getUuids();
-                        btStatus.setText(conStatusText[0] + conStatusText[5] + conStatusText[4] + MAC);//"Connection Status: Paired, Listening"
-                        //retry.setVisibility(View.INVISIBLE);                                        //Make retry button and list of connected devices invisible
+                        BTStatus = "paired";
+                        BTdevice = device;
                         deviceList.setVisibility(View.INVISIBLE);
                         listTitle.setVisibility(View.INVISIBLE);
 
                     } else {
-                        btStatus.setText(conStatusText[0] + conStatusText[3]);                      //"Connection Status: Not Paired"
+                        BTStatus = "notPaired";
                     }
                 }
             }
@@ -149,6 +125,24 @@ public class MainActivity extends AppCompatActivity {
         if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-
+        final TextView btStatus = findViewById(R.id.conStatus);
+        final String conStatusText[] = resources.getStringArray(R.array.ConStatText);
+        updateStatus(conStatusText, btStatus);
+    }
+    private void updateStatus(String conStatusText[], TextView btStatus){
+        String statusText;
+        if(BTStatus.equals("paired")){
+            statusText = conStatusText[0] + conStatusText[5] + conStatusText[4] + MAC;              //"Connection Status: Paired, Listening"
+        }
+        else if(BTStatus.equals("notPaired")){
+            statusText = conStatusText[0] + conStatusText[3];
+        }
+        else if (BTStatus.equals("connected")){
+            statusText = conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC;
+        }
+        else{
+            statusText = "typo";
+        }
+        btStatus.setText(statusText);
     }
 }
