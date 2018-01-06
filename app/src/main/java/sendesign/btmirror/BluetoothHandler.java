@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,21 +27,12 @@ import java.util.logging.Handler;
 
 /**
  * Created by Lucas on 11/19/17.
- * handles the data transmission
+ * handles the bluetooth connection process. Once connected it hands the Bluetooth Socket to ConnectedThread, which handles the data transfer
  */
 
 public class BluetoothHandler extends Thread{
+
     private Handler mHandler; // handler that gets info from Bluetooth service
-
-    // Defines several constants used when transmitting messages between the
-    // service and the UI.
-    private interface MessageConstants {
-        public static final int MESSAGE_READ = 0;
-        public static final int MESSAGE_WRITE = 1;
-        public static final int MESSAGE_TOAST = 2;
-
-        // ... (Add other message types here as needed.)
-    }
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final int PERIOD = 5000;
     private View root = null;
@@ -55,11 +47,9 @@ public class BluetoothHandler extends Thread{
     private final BluetoothDevice mmDevice;
 
     public BluetoothHandler(BluetoothDevice device) {
-        // Use a temporary object that is later assigned to mmSocket
-        // because mmSocket is final.
-        BluetoothSocket tmp = null;
+        BluetoothSocket tmp = null;                                                                 // Use a temporary object that is later assigned to mmSocket because mmSocket is final.
         mmDevice = device;
-        uuid = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
+        uuid = MainActivity.uuid;
         try {
             // Get a BluetoothSocket to connect with the given BluetoothDevice.
             // MY_UUID is the app's UUID string, also used in the server code.
@@ -90,7 +80,9 @@ public class BluetoothHandler extends Thread{
             return;
         }
         if(mmSocket.isConnected()){
-            new ConnectedThread(mmSocket);
+            ConnectedThread BTthread = new ConnectedThread(mmSocket);
+            BTthread.run();
+
         }
 
     }

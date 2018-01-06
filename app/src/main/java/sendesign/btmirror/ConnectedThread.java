@@ -12,6 +12,7 @@ import java.io.OutputStream;
 
 /**
  * Created by pook on 1/2/18.
+ * This thread handles the BT socket after a connection is established
  */
 
 public class ConnectedThread extends Thread {

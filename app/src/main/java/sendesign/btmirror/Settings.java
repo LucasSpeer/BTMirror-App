@@ -41,7 +41,6 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.default_settings);
-        Intent intent = getIntent();
         resources = getResources();
         prefs = this.getPreferences(Context.MODE_PRIVATE);                                          //retrieve default preference file for storing layout as key value pairs {(string) "L1", (int)1}
         editor = prefs.edit();
@@ -82,7 +81,7 @@ public class Settings extends AppCompatActivity {
         CheckBox celsius = findViewById(R.id.useCelCheck);
         celsius.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {                              //On state change
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {            //On state change
                 if(isChecked){                                                                      //if box is now checked
                     currentOptions[1] = true;                                                       //set appropriate boolean
                 }
@@ -174,7 +173,6 @@ public class Settings extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             Toast.makeText(this, resources.getText(R.string.yesBT), Toast.LENGTH_SHORT).show();
         }
         else{

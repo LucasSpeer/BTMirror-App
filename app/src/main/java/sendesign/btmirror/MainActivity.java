@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final Resources res = getResources();
         resources = res;
-        final TextView btStatus = findViewById(R.id.conStatus);
+        final TextView statusText = findViewById(R.id.conStatus);
         final String conStatusText[] = resources.getStringArray(R.array.ConStatText);               //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
         final Button layout = findViewById(R.id.layout);                                            //Layout config button
         layout.setOnClickListener(new View.OnClickListener() {
@@ -61,46 +61,50 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        From this block comment to the next checks and enable the bluetooth hardware
-        and attempts to establish a connection with the smart mirror acting as the host
-        and the phone as the client
-         */
         mBluetoothAdapter  = BluetoothAdapter.getDefaultAdapter();                                  //get bluetooth adapter
         if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-        uuid = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
+
+        uuid = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");                             //UUID which must be the same as on the RaspPi
         final Button retry = findViewById(R.id.retryButton);
-        findDevices(btStatus, conStatusText, retry, resources);
+        findDevices(statusText, conStatusText, retry, resources);                                   //get bluetooth devices and check if paired
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                updateStatus(conStatusText, btStatus);
+            public void onClick(View v) {                                                           //Retry Button
+                updateStatus(conStatusText, statusText);                                            //first update the status text
                 if(!BTStatus.equals("connected")){
-                    BTHandler = new BluetoothHandler(BTdevice);
+                    BTHandler.cancel();
+                    BTHandler = new BluetoothHandler(BTdevice);                                     //if BT isn't connected attempt to reinitialize the BT Handler
+                    BTHandler.run();
                 }
-                updateStatus(conStatusText, btStatus);
+                updateStatus(conStatusText, statusText);                                            //and update the status Text again, This step and the identical line in this listener may be unnecessary thanks to the broadcast receiver
             }
         });
-        updateStatus(conStatusText, btStatus);
-        BroadcastReceiver receiver = new BroadcastReceiver() {
+        updateStatus(conStatusText, statusText);
+        BroadcastReceiver receiver = new BroadcastReceiver() {                                      //This broadcast receiver listens for updates from BluetoothHandler and ConnectedThread to update the BT status text
             @Override
             public void onReceive(Context context, Intent intent) {
-                updateStatus(conStatusText, btStatus);
+                updateStatus(conStatusText, statusText);
             }
         };
-        IntentFilter filter = new IntentFilter();
+        IntentFilter filter = new IntentFilter();                                                   //The broadcast receiver needs a intent filter to be registered
         filter.addAction("update");
         registerReceiver(receiver, filter);
+        BTHandler = new BluetoothHandler(BTdevice);
+        BTHandler.run();
     }
 
+    /*
+        findDevices() first gets the list of devices paired, then checks if any is named SmartMirror.
+        If one is found the status text is updated/hidden and the device is saved.
+        If none is found a
+     */
     @SuppressLint("SetTextI18n")
     private void findDevices(TextView btStatus, String conStatusText[], Button retry, Resources resources) {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();                  //check if already paired
         TextView deviceList = findViewById(R.id.devList);
         TextView listTitle = findViewById(R.id.devListTitle);
-        int size = pairedDevices.size();
         String devStr = "";
         int i = 0;
         if (pairedDevices.size() > 0) {                                                             // There are paired devices. Get the name and address of each paired device.
