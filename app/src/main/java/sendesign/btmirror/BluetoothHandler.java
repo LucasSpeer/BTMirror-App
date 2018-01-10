@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.content.Intent;
@@ -32,19 +33,13 @@ import java.util.logging.Handler;
 
 public class BluetoothHandler extends Thread{
 
-    private Handler mHandler; // handler that gets info from Bluetooth service
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final int PERIOD = 5000;
-    private View root = null;
     final private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private BluetoothSocket socket;
-    public static InputStream mmInStream;
-    public static OutputStream mmOutStream;
     private UUID uuid;
-    private byte[] mmBuffer; // mmBuffer store for the stream
-    private byte[] dataToWrite;
     private final BluetoothSocket mmSocket;
     private final BluetoothDevice mmDevice;
+    private ConnectedThread BTthread;
 
     public BluetoothHandler(BluetoothDevice device) {
         BluetoothSocket tmp = null;                                                                 // Use a temporary object that is later assigned to mmSocket because mmSocket is final.
@@ -80,7 +75,7 @@ public class BluetoothHandler extends Thread{
             return;
         }
         if(mmSocket.isConnected()){
-            ConnectedThread BTthread = new ConnectedThread(mmSocket);
+            BTthread = new ConnectedThread(mmSocket);
             BTthread.run();
 
         }
@@ -94,5 +89,6 @@ public class BluetoothHandler extends Thread{
         } catch (IOException e) {
             Log.e(TAG, "Could not close the client socket", e);
         }
+        BTthread.cancel();
     }
 }

@@ -158,4 +158,9 @@ public class MainActivity extends AppCompatActivity {
         }
         btStatus.setText(statusText);
     }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        BTHandler.cancel();
+    }
 }
