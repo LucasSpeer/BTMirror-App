@@ -1,6 +1,8 @@
 package sendesign.btmirror;
 
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -54,6 +56,9 @@ public class ConnectedThread extends Thread {
         MainActivity.mmInStream = tmpIn;
         MainActivity.mmOutStream = tmpOut;
         MainActivity.BTFound = true;
+        Intent updateIntent = new Intent();
+        updateIntent.setAction("update");
+
     }
 
     public void run() {

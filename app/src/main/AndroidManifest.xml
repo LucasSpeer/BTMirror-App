@@ -27,8 +27,6 @@
             android:name=".LayoutConfig"
             android:label="LayoutConfig"/>
         <activity android:name=".Settings" />
-        <service android:name=".BluetoothHandler"/>
-
     </application>
 
 </manifest>

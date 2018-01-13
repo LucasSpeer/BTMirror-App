@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     public static Boolean BTFound = false;
     public static String BTStatus;
     public BluetoothHandler BTHandler;
+    public BroadcastReceiver receiver;
     private Resources resources;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +75,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {                                                           //Retry Button
                 updateStatus(conStatusText, statusText);                                            //first update the status text
                 if(!BTStatus.equals("connected")){
-                    BTHandler.cancel();
                     BTHandler = new BluetoothHandler(BTdevice);                                     //if BT isn't connected attempt to reinitialize the BT Handler
                     BTHandler.run();
                 }
@@ -82,10 +82,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         updateStatus(conStatusText, statusText);
-        BroadcastReceiver receiver = new BroadcastReceiver() {                                      //This broadcast receiver listens for updates from BluetoothHandler and ConnectedThread to update the BT status text
+        receiver = new BroadcastReceiver() {                                      //This broadcast receiver listens for updates from BluetoothHandler and ConnectedThread to update the BT status text
             @Override
             public void onReceive(Context context, Intent intent) {
-                updateStatus(conStatusText, statusText);
+                String action = intent.getAction();
+                if(action.equals("update"))
+                {
+                    updateStatus(conStatusText, statusText);
+                }
             }
         };
         IntentFilter filter = new IntentFilter();                                                   //The broadcast receiver needs a intent filter to be registered
@@ -159,8 +163,11 @@ public class MainActivity extends AppCompatActivity {
         btStatus.setText(statusText);
     }
     @Override
-    protected void onDestroy(){
+    protected void onDestroy() {
         super.onDestroy();
-        BTHandler.cancel();
+        unregisterReceiver(receiver);
+        if (BTStatus.equals("connected")) {
+            BTHandler.cancel();
+        }
     }
 }
