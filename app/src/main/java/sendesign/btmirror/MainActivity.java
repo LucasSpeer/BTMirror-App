@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(receiver, filter);
         BTHandler = new BluetoothHandler(BTdevice);
         BTHandler.run();
+        updateStatus(conStatusText, statusText);
     }
 
     /*

@@ -161,7 +161,7 @@ public class Settings extends AppCompatActivity {
             editor.apply();
         }
         String data = "{\n";
-        data += ("zipcode," + zipcode + "\n");
+        data += ("zipcode =" + zipcode + "\n");
         for(int i = 0; i < optionCount; i++){
             data += (options[i] + " = " + savedOptions[i].toString() + "\n");
         }

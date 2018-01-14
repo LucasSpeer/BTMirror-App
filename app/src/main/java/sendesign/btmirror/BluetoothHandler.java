@@ -75,6 +75,7 @@ public class BluetoothHandler extends Thread{
             return;
         }
         BTthread = new ConnectedThread(mmSocket);
+        MainActivity.BTStatus = "connected";
         //BTthread.run();
     }
 
