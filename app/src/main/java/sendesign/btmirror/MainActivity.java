@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         updateStatus(conStatusText, statusText);
-        receiver = new BroadcastReceiver() {                                      //This broadcast receiver listens for updates from BluetoothHandler and ConnectedThread to update the BT status text
+        receiver = new BroadcastReceiver() {                                                        //This broadcast receiver listens for updates from BluetoothHandler and ConnectedThread to update the BT status text
             @Override
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
@@ -93,10 +93,13 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         IntentFilter filter = new IntentFilter();                                                   //The broadcast receiver needs a intent filter to be registered
-        filter.addAction("update");
+        filter.addAction("update");                                                                 //Listen for broadcasts with the action "update"
         registerReceiver(receiver, filter);
-        BTHandler = new BluetoothHandler(BTdevice);
-        BTHandler.run();
+        if(!BTStatus.equals("notPaired")){
+            BTHandler = new BluetoothHandler(BTdevice);                                             //if the BTdevice was set, create the bluetooth handler
+            BTHandler.run();                                                                        //and attempt to connect
+        }
+
         updateStatus(conStatusText, statusText);
     }
 
@@ -122,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
                         MAC = device.getAddress();
                         BTStatus = "paired";
                         BTdevice = device;
-                        deviceList.setVisibility(View.INVISIBLE);
+                        deviceList.setVisibility(View.INVISIBLE);                                   //If a SmartMirror is found among the paired devices hide the list of paired devices
                         listTitle.setVisibility(View.INVISIBLE);
 
                     } else {
@@ -132,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
             }
             deviceList.setText(devStr);
         } else {
-            deviceList.setText(R.string.devlisterror);       //error - no devices found
+            deviceList.setText(R.string.devlisterror);                                              //error - no devices found
         }
     }
 
@@ -144,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
         final TextView btStatus = findViewById(R.id.conStatus);
         final String conStatusText[] = resources.getStringArray(R.array.ConStatText);
-        updateStatus(conStatusText, btStatus);
+        updateStatus(conStatusText, btStatus);                                                      //Update the Status text
     }
 
     private void updateStatus(String conStatusText[], TextView btStatus){
@@ -168,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         unregisterReceiver(receiver);
         if (BTStatus.equals("connected")) {
-            BTHandler.cancel();
+            BTHandler.cancel();                                                                     //Disconnect from the SmartMirror on app shutdown
         }
     }
 }

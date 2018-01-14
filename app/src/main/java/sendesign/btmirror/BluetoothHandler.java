@@ -36,19 +36,14 @@ public class BluetoothHandler extends Thread{
     private static final String TAG = "MY_APP_DEBUG_TAG";
     private static final int PERIOD = 5000;
     final private BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-    private UUID uuid;
     private final BluetoothSocket mmSocket;
-    private final BluetoothDevice mmDevice;
     private ConnectedThread BTthread;
 
     public BluetoothHandler(BluetoothDevice device) {
         BluetoothSocket tmp = null;                                                                 // Use a temporary object that is later assigned to mmSocket because mmSocket is final.
-        mmDevice = device;
-        uuid = MainActivity.uuid;
+        UUID uuid = MainActivity.uuid;
         try {
-            // Get a BluetoothSocket to connect with the given BluetoothDevice.
-            // MY_UUID is the app's UUID string, also used in the server code.
-            tmp = mmDevice.createRfcommSocketToServiceRecord(uuid);
+            tmp = device.createRfcommSocketToServiceRecord(uuid);                                   //Get a BluetoothSocket to connect with the given BluetoothDevice. uuid must match rfcomm-server.py on the Rpi
         } catch (IOException e) {
             Log.e(TAG, "Socket's create() method failed", e);
         }
@@ -57,32 +52,27 @@ public class BluetoothHandler extends Thread{
     }
 
     public void run() {
-        // Cancel discovery because it otherwise slows down the connection.
-        mBluetoothAdapter.cancelDiscovery();
+        mBluetoothAdapter.cancelDiscovery();                                                        //Cancel discovery because it otherwise slows down the connection.
         Intent intent = new Intent();
         intent.setAction("update");
         try {
-            // Connect to the remote device through the socket. This call blocks
-            // until it succeeds or throws an exception.
-            mmSocket.connect();
+            mmSocket.connect();                                                                     //Connect to the remote device through the socket. This call blocks until it succeeds or throws an exception
         } catch (IOException connectException) {
-            // Unable to connect; close the socket and return.
             try {
-                mmSocket.close();
+                mmSocket.close();                                                                   //Unable to connect; close the socket and return.
             } catch (IOException closeException) {
                 Log.e(TAG, "Could not close the client socket", closeException);
             }
             return;
         }
-        BTthread = new ConnectedThread(mmSocket);
-        MainActivity.BTStatus = "connected";
-        //BTthread.run();
+        BTthread = new ConnectedThread(mmSocket);                                                   //Create a new thread to handle the connection.
+        MainActivity.BTStatus = "connected";                                                        //Update the status for the main menu text
+        //BTthread.run();                                                                           //TODO: modify ConnectedThread.run() to no hang and to handle incoming messages from the SmartMirror
     }
 
-    // Closes the client socket and causes the thread to finish.
     public void cancel() {
         try {
-            mmSocket.close();
+            mmSocket.close();                                                                       // Closes the client socket and causes the thread to finish.
         } catch (IOException e) {
             Log.e(TAG, "Could not close the client socket", e);
         }
