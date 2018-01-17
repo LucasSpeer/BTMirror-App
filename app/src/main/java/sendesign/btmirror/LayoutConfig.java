@@ -222,7 +222,11 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         setCurrentText();                                                                           //Updates the containing the saved currentLayout
         String data = "{\n";
         for(int i = 0; i < currentLayout.length; i++){
-            data += (spots[i] + " = " + moduleList[currentLayout[i]] + "\n");
+            data += ("\"" + spots[i] + "\": " + moduleList[currentLayout[i]]);
+            if(i != currentLayout.length - 1){
+                data += ",";
+            }
+            data += "\n";
         }
         data += "}";
         if(MainActivity.BTFound) {
