@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         }
         final TextView btStatus = findViewById(R.id.conStatus);
         final String conStatusText[] = resources.getStringArray(R.array.ConStatText);
-        updateStatus(conStatusText, btStatus);                                                      //Update the Status text
+        //updateStatus(conStatusText, btStatus);                                                      //Update the Status text
     }
 
     private void updateStatus(String conStatusText[], TextView btStatus){
