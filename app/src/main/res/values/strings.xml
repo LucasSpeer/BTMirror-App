@@ -23,6 +23,29 @@
     <string name="enterZip">Enter a new 5-Digit Zipcode:</string>
     <string name="noBT">Not Connected, Saved Locally</string>
     <string name="yesBT">Applied</string>
+    <string name="defLayout">{\n
+                                \"layout\":\n
+                                    \"l1\": \"greeting\",\n
+                                    \"l2\": \"time\",\n
+                                    \"l3\": \"none",\n
+                                    \"r1\": \"weather\",\n
+                                    \"r2\": \"none\",\n
+                                    \"r3\": \"none\"\n
+                            },</string>
+    <string name="defSettings">\n\"weather\":\n
+                                    {\n
+                                    \"useC\": false,\n
+                                    \"zipcode\": "56001"\n
+                                    },\n
+                                \"general\":\n
+                                    {\n
+                                    \"military\": false,\n
+                                    \"showSec\": false,\n
+                                    \"color\": \"white\",\n
+                                    \"size\": 500\n
+                                    }\n
+                                }
+    </string>
     <string-array name="spotNames">
         <item>Left Top:</item>
         <item>Right Tip:</item>

@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -34,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
     public static OutputStream mmOutStream = null;
     public static Boolean BTFound = false;
     public static String BTStatus;
+    public static String layoutStr = "";
+    public static String settingsStr = "";
+    private SharedPreferences prefs = null;                                                         //create a shared preference for storing settings
+    private SharedPreferences.Editor editor;
     public BluetoothHandler BTHandler;
     public BroadcastReceiver receiver;
     private Resources resources;
@@ -45,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
         resources = res;
         final TextView statusText = findViewById(R.id.conStatus);
         final String conStatusText[] = resources.getStringArray(R.array.ConStatText);               //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
+        prefs = this.getPreferences(Context.MODE_PRIVATE);                                          //retrieve default preference file for storing layout as key value pairs {(string) "L1", (int)1}
+        editor = prefs.edit();
+        layoutStr = prefs.getString("layoutStr", res.getString(R.string.defLayout));
+        settingsStr = prefs.getString("settingsStr", res.getString(R.string.defSettings));
         final Button layout = findViewById(R.id.layout);                                            //Layout config button
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,17 +148,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
-            mBluetoothAdapter.enable();
-        }
-        final TextView btStatus = findViewById(R.id.conStatus);
-        final String conStatusText[] = resources.getStringArray(R.array.ConStatText);
-        //updateStatus(conStatusText, btStatus);                                                      //Update the Status text
-    }
-
     private void updateStatus(String conStatusText[], TextView btStatus){
         String statusText;
         if(BTStatus.equals("paired")){
@@ -170,6 +168,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(receiver);
+        editor.putString("layoutStr", layoutStr);
+        editor.putString("settingsStr", settingsStr);
+        editor.apply();
         if (BTStatus.equals("connected")) {
             BTHandler.cancel();                                                                     //Disconnect from the SmartMirror on app shutdown
         }

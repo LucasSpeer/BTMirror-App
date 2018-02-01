@@ -220,17 +220,22 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
             editor.apply();
         }
         setCurrentText();                                                                           //Updates the containing the saved currentLayout
-        String data = "{\n";
+        /*
+        The string data contains the layout settings and it's format is outlined in strings.xml
+         */
+        String data = "{\n  \"layout\":\n   {\n";
         for(int i = 0; i < currentLayout.length; i++){
-            data += ("\"" + spots[i] + "\": " + moduleList[currentLayout[i]]);
+            data += ("    \"" + spots[i] + "\": " + moduleList[currentLayout[i]]);
             if(i != currentLayout.length - 1){
                 data += ",";
             }
             data += "\n";
         }
-        data += "}";
+        data += "   },";
+        MainActivity.layoutStr = data;
+        String strToSend = data + MainActivity.settingsStr;
         if(MainActivity.BTFound) {
-            byte dataByte[] = data.getBytes();
+            byte dataByte[] = strToSend.getBytes();
             OutputStream mOutputStream = MainActivity.mmOutStream;
             try {
                 mOutputStream.write(dataByte);

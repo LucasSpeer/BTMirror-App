@@ -160,18 +160,21 @@ public class Settings extends AppCompatActivity {
             editor.putString("zipcode", zipcode);
             editor.apply();
         }
-        String data = "{\n";
-        data += ("\"zipcode\" :" + zipcode + "\n");
-        for(int i = 0; i < optionCount; i++){
-            data += ("\"" + options[i] + "\": " + savedOptions[i].toString());
-            if(i != optionCount - 1){
-                data += ",";
-            }
-            data += "\n";
-        }
-        data += "}";
+        /*
+        The string data contains the weather and general setting that come after the layout setting in config.json on the Rpi
+        the format is laid out in strings.xml
+         */
+        String data = "\n  \"weather\":\n   {\n";
+        data += ("    \"useC\": " + savedOptions[1].toString() + ",\n");
+        data += ("    \"zipcode\": " + zipcode + "\n   },");
+        data += ("\n  \"general\":\n   {\n");
+        data += ("    \"military\": " + savedOptions[2].toString() + ",\n");
+        data += ("    \"showSec\": " + savedOptions[3].toString());
+        data += "\n   }\n}";
+        MainActivity.settingsStr = data;
+        String strToWrite = MainActivity.layoutStr + data;
         if(MainActivity.BTFound) {
-            byte dataByte[] = data.getBytes();
+            byte dataByte[] = strToWrite.getBytes();
             try {
                 mmOutStream.write(dataByte);
             } catch (IOException e) {
