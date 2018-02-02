@@ -23,6 +23,9 @@
     <string name="enterZip">Enter a new 5-Digit Zipcode:</string>
     <string name="noBT">Not Connected, Saved Locally</string>
     <string name="yesBT">Applied</string>
+    <string name="connectingText">Connecting...</string>
+    <string name="connSucceeded">Success!</string>
+    <string name="connFailed">Failed!</string>
     <string name="defLayout">{\n
                                 \"layout\":\n
                                     \"l1\": \"greeting\",\n
@@ -57,7 +60,7 @@
     <string-array name="ConStatText">
         <item>Connection Status: </item>
         <item>Attempting To Connect</item>
-        <item>Succes</item>
+        <item>Success</item>
         <item>Not Paired</item>
         <item>\nMac Address: </item>
         <item>Paired, Listening</item>

@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Objects;
@@ -84,8 +86,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {                                                           //Retry Button
                 updateStatus(conStatusText, statusText);                                            //first update the status text
                 if(!BTStatus.equals("connected")){
+                    Toast.makeText(getApplicationContext(), R.string.connectingText, Toast.LENGTH_SHORT).show();
                     BTHandler = new BluetoothHandler(BTdevice);                                     //if BT isn't connected attempt to reinitialize the BT Handler
                     BTHandler.run();
+                }
+                if(!BTStatus.equals("connected")){
+                    Toast.makeText(getApplicationContext(), R.string.connFailed, Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), R.string.connSucceeded, Toast.LENGTH_SHORT).show();
                 }
                 updateStatus(conStatusText, statusText);                                            //and update the status Text again, This step and the identical line in this listener may be unnecessary thanks to the broadcast receiver
             }
@@ -104,7 +113,8 @@ public class MainActivity extends AppCompatActivity {
         IntentFilter filter = new IntentFilter();                                                   //The broadcast receiver needs a intent filter to be registered
         filter.addAction("update");                                                                 //Listen for broadcasts with the action "update"
         registerReceiver(receiver, filter);
-        if(!BTStatus.equals("notPaired")){
+
+        if(!BTStatus.equals("notPaired") && !BTStatus.equals("connected")){
             BTHandler = new BluetoothHandler(BTdevice);                                             //if the BTdevice was set, create the bluetooth handler
             BTHandler.run();                                                                        //and attempt to connect
         }
