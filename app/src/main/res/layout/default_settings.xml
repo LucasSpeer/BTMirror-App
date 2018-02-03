@@ -13,7 +13,8 @@
         android:layout_marginBottom="8dp"
         android:keyboardNavigationCluster="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="UnusedAttribute">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/linearLayout"
@@ -24,7 +25,8 @@
             android:keyboardNavigationCluster="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout7"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="UnusedAttribute">
 
             <Button
                 android:id="@+id/SettingsBack"
@@ -35,7 +37,8 @@
                 android:text="@string/cancel"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginRight="8dp" />
 
         </android.support.constraint.ConstraintLayout>
 
@@ -98,7 +101,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:checked="false"
-            android:text="@string/time24hrOption" />
+            android:text="@string/time24hrOption"
+            android:layout_marginStart="16dp" />
 
         <CheckBox
             android:id="@+id/showSecondToggle"
@@ -106,7 +110,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:checked="false"
-            android:text="@string/secondsOption" />
+            android:text="@string/secondsOption"
+            android:layout_marginStart="16dp" />
 
         <TextView
             android:id="@+id/weatherTitle"
@@ -122,19 +127,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:text="@string/zip" />
+            android:text="@string/zip"
+            android:layout_marginStart="16dp" />
 
         <TextView
             android:id="@+id/currentZip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp" />
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:text="@string/enterZip" />
+            android:text="@string/enterZip"
+            android:layout_marginStart="16dp" />
 
         <EditText
             android:id="@+id/zipcode"
@@ -143,7 +151,8 @@
             android:layout_marginLeft="16dp"
             android:ems="10"
             android:inputType="textPersonName"
-            android:selectAllOnFocus="false" />
+            android:selectAllOnFocus="false"
+            android:layout_marginStart="16dp" />
 
         <CheckBox
             android:id="@+id/useCelCheck"
@@ -151,7 +160,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:checked="false"
-            android:text="@string/useC" />
+            android:text="@string/useC"
+            android:layout_marginStart="16dp" />
 
     </LinearLayout>
 

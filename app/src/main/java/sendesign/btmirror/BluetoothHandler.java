@@ -1,30 +1,14 @@
 package sendesign.btmirror;
 
-import android.app.IntentService;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.res.Resources;
-import android.os.Bundle;
 import android.content.Intent;
-import android.os.Bundle;
-import android.os.IBinder;
-import java.util.Objects;
-import android.os.Message;
-import android.support.annotation.Nullable;
+
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.UUID;
-import java.util.logging.Handler;
 
 /**
  * Created by Lucas on 11/19/17.

@@ -2,7 +2,6 @@ package sendesign.btmirror;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -24,9 +23,9 @@ public class ConnectedThread extends Thread {
     // Defines several constants used when transmitting messages between the
     // service and the UI.
     private interface MessageConstants {
-        public static final int MESSAGE_READ = 0;
-        public static final int MESSAGE_WRITE = 1;
-        public static final int MESSAGE_TOAST = 2;
+        int MESSAGE_READ = 0;
+        int MESSAGE_WRITE = 1;
+        int MESSAGE_TOAST = 2;
     }
     // ... (Add other message types here as needed.)
     private final BluetoothSocket mmSocket;

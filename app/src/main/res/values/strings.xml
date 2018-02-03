@@ -4,13 +4,8 @@
     <string name="confText">Configure</string>
     <string name="main_menu">Main Menu</string>
     <string name="edit_layout">Edit Layout</string>
-    <string name="smart_mirror_disconnected">Smart Mirror: Disconnected</string>
-    <string name="back">Back</string>
-    <string name="onoff">On/Off</string>
     <string name="settingText">Configure Modules</string>
-    <string name="modChoose">Choose A Module</string>
     <string name="retry">Retry</string>
-    <string name="choose">Choose a Module</string>
     <string name="deviceList">Devices seen</string>
     <string name="devlisterror">No Bluetooth devices paired\nGo to device settings to find your mirror</string>
     <string name="currentConfig">Current Config:\n</string>
@@ -19,7 +14,6 @@
     <string name="secondsOption">Show Seconds</string>
     <string name="useC">Use Celsius</string>
     <string name="zip">Zipcode - Currently:</string>
-    <string name="noChangesText">has no options</string>
     <string name="enterZip">Enter a new 5-Digit Zipcode:</string>
     <string name="noBT">Not Connected, Saved Locally</string>
     <string name="yesBT">Applied</string>

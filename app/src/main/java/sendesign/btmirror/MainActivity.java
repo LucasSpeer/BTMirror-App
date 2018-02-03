@@ -1,8 +1,6 @@
 package sendesign.btmirror;
 
 import android.annotation.SuppressLint;
-import android.app.IntentService;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -11,9 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.os.AsyncTask;
 import android.os.Build;
-import android.os.ParcelUuid;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -118,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             BTHandler = new BluetoothHandler(BTdevice);                                             //if the BTdevice was set, create the bluetooth handler
             BTHandler.run();                                                                        //and attempt to connect
         }
-
+        editor.apply();
         updateStatus(conStatusText, statusText);
     }
 

@@ -82,12 +82,9 @@ public class Settings extends AppCompatActivity {
         celsius.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {                              //On state change
-                if(isChecked){                                                                      //if box is now checked
-                    currentOptions[1] = true;                                                       //set appropriate boolean
-                }
-                else {
-                    currentOptions[1] = false;
-                }
+                //if box is now checked
+//set appropriate boolean
+                currentOptions[1] = isChecked;
             }
         });
         boxArr[0] = celsius;
@@ -95,11 +92,7 @@ public class Settings extends AppCompatActivity {
         hourFormat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    currentOptions[2] = true;
-                } else {
-                    currentOptions[2] = false;
-                }
+                currentOptions[2] = isChecked;
             }
         });
         boxArr[1] = hourFormat;
@@ -107,11 +100,7 @@ public class Settings extends AppCompatActivity {
         showSeconds.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
-                    currentOptions[3] = true;
-                } else {
-                    currentOptions[3] = false;
-                }
+                currentOptions[3] = isChecked;
             }
         });
         boxArr[2] = showSeconds;
@@ -123,6 +112,7 @@ public class Settings extends AppCompatActivity {
                 boxArr[i].setChecked(false);
             }
         }
+        editor.apply();
     }
 
     @Override

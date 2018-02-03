@@ -6,11 +6,12 @@ package sendesign.btmirror;
     * 2 buttons, back(to main menu), and config(set chosen lay)
     * SharedPreference file to store key value pairs locally
  */
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Objects;
 
 
 public class LayoutConfig extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -103,6 +105,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         currentLayout = savedLayout;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {              //Function On spinner clicked and item Selected
         String chosenModule = parent.getSelectedItem().toString();                                  //get String of item selected
@@ -112,7 +115,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         int oldMod = 0;
         if (firstRunCnt >= modCnt) {                                                                //if the spinners have been initialized
             for (int i = 0; i < modCnt; i++) {                                                      //sets chosen module integer correspond to the position of the selected item in moduleList
-                if (chosenModule == moduleList[i]) {                                                //Compares the string selected to the list of module names
+                if (Objects.equals(chosenModule, moduleList[i])) {                                                //Compares the string selected to the list of module names
                     chosenModInt = i;
                 }
                 if (ids[i] == parent.getId()) {                                                     //Compare the id of the Spinner the was selected with the array of spinner IDs to determine which spinner was chosen
