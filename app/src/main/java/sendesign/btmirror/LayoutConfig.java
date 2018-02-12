@@ -115,7 +115,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         int oldMod = 0;
         if (firstRunCnt >= modCnt) {                                                                //if the spinners have been initialized
             for (int i = 0; i < modCnt; i++) {                                                      //sets chosen module integer correspond to the position of the selected item in moduleList
-                if (Objects.equals(chosenModule, moduleList[i])) {                                                //Compares the string selected to the list of module names
+                if (Objects.equals(chosenModule, moduleList[i])) {                                  //Compares the string selected to the list of module names
                     chosenModInt = i;
                 }
                 if (ids[i] == parent.getId()) {                                                     //Compare the id of the Spinner the was selected with the array of spinner IDs to determine which spinner was chosen
@@ -131,7 +131,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
                     ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(spinArr[k].getContext(), R.layout.support_simple_spinner_dropdown_item, newStringArr); //Create a new array adapter for the changed spot
                     spinnerArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     spinArr[k].setAdapter(spinnerArrayAdapter);
-                    firstRunCnt = modCnt;                                                             //Not 100% sure this is necessary. Remove at own risk
+                    firstRunCnt = modCnt;                                                           //Not 100% sure this is necessary. Remove at own risk
                 }
             }
             currentLayout = newLayout;

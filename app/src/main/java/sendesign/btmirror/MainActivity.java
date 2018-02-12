@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public BluetoothHandler BTHandler;
     public BroadcastReceiver receiver;
     private Resources resources;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,11 +80,10 @@ public class MainActivity extends AppCompatActivity {
         findDevices(statusText, conStatusText, retry, resources);                                   //get bluetooth devices and check if paired
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {                                                           //Retry Button
+            public void onClick(View v) {                                                            //Retry Button
                 updateStatus(conStatusText, statusText);                                            //first update the status text
-                if(!BTStatus.equals("connected")){
-                    Toast.makeText(getApplicationContext(), R.string.connectingText, Toast.LENGTH_SHORT).show();
-                    BTHandler = new BluetoothHandler(BTdevice);                                     //if BT isn't connected attempt to reinitialize the BT Handler
+                if(!BTStatus.equals("connected")){                                                  //create the Handler and and run it
+                    BTHandler = new BluetoothHandler(BTdevice);
                     BTHandler.run();
                 }
                 if(!BTStatus.equals("connected")){
@@ -111,20 +111,21 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(receiver, filter);
 
         if(!BTStatus.equals("notPaired") && !BTStatus.equals("connected")){
-            BTHandler = new BluetoothHandler(BTdevice);                                             //if the BTdevice was set, create the bluetooth handler
+            BTHandler = new BluetoothHandler(BTdevice);
             BTHandler.run();                                                                        //and attempt to connect
         }
         editor.apply();
         updateStatus(conStatusText, statusText);
     }
 
-    /*
+
+    @SuppressLint("SetTextI18n")
+    private void findDevices(TextView btStatus, String conStatusText[], Button retry, Resources resources) {
+        /*
         findDevices() first gets the list of devices paired, then checks if any is named SmartMirror.
         If one is found the status text is updated/hidden and the device is saved.
         If none is found a
      */
-    @SuppressLint("SetTextI18n")
-    private void findDevices(TextView btStatus, String conStatusText[], Button retry, Resources resources) {
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();                  //check if already paired
         TextView deviceList = findViewById(R.id.devList);
         TextView listTitle = findViewById(R.id.devListTitle);
@@ -179,6 +180,9 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
         if (BTStatus.equals("connected")) {
             BTHandler.cancel();                                                                     //Disconnect from the SmartMirror on app shutdown
+
         }
+
     }
+
 }
