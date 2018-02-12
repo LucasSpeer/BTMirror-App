@@ -228,7 +228,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
          */
         String data = "{\n  \"layout\":\n   {\n";
         for(int i = 0; i < currentLayout.length; i++){
-            data += ("    \"" + spots[i] + "\": " + moduleList[currentLayout[i]]);
+            data += ("    \"" + spots[i] + "\": " + "\"" + moduleList[currentLayout[i]] + "\"");
             if(i != currentLayout.length - 1){
                 data += ",";
             }

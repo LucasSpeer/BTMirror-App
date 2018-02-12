@@ -38,7 +38,10 @@ public class BluetoothHandler extends Thread{
         Intent intent = new Intent();
         intent.setAction("update");
         try {
-            mmSocket.connect();                                                                     //Connect to the remote device through the socket. This call blocks until it succeeds or throws an exception
+            if(mmSocket != null){
+                mmSocket.connect();                                                                 //Connect to the remote device through the socket. This call blocks until it succeeds or throws an exception
+
+            }
         } catch (IOException connectException) {
             try {
                 mmSocket.close();                                                                   //Unable to connect; close the socket and return.
