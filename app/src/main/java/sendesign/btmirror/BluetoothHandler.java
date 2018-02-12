@@ -55,7 +55,7 @@ public class BluetoothHandler extends Thread{
         BTthread.start();                                                                           //TODO: modify ConnectedThread.run() to no hang and to handle incoming messages from the SmartMirror
     }
 
-    public void cancel() {
+    void cancel() {
         try {
             mmSocket.close();                                                                       // Closes the client socket and causes the thread to finish.
         } catch (IOException e) {
@@ -72,8 +72,8 @@ public class BluetoothHandler extends Thread{
                 task = new bluetoothTask();
                 task.execute();
 
-            make sure to
-             */
+            make sure to have task.cancel(false); in the cancel() function
+         */
 
         @Override
         protected Object doInBackground(Object[] objects) {
