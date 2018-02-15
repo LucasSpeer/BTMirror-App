@@ -29,8 +29,8 @@ public class ConnectedThread extends Thread {
     }
     // ... (Add other message types here as needed.)
     private final BluetoothSocket mmSocket;
-    private final InputStream mmInStream;
-    private final OutputStream mmOutStream;
+    private InputStream mmInStream = MainActivity.mmInStream;
+    private OutputStream mmOutStream = MainActivity.mmOutStream;
     private byte[] mmBuffer; // mmBuffer store for the stream
 
     public ConnectedThread(BluetoothSocket socket) {
@@ -40,24 +40,28 @@ public class ConnectedThread extends Thread {
 
         // Get the input and output streams; using temp objects because
         // member streams are final.
-        try {
-            tmpIn = socket.getInputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "Error occurred when creating input stream", e);
-        }
-        try {
-            tmpOut = socket.getOutputStream();
-        } catch (IOException e) {
-            Log.e(TAG, "Error occurred when creating output stream", e);
-        }
-        mmInStream = tmpIn;
-        mmOutStream = tmpOut;
-        MainActivity.mmInStream = tmpIn;
-        MainActivity.mmOutStream = tmpOut;
-        MainActivity.BTFound = true;
-        Intent updateIntent = new Intent();
-        updateIntent.setAction("update");
+        if(socket != null) {
+            try {
+                tmpIn = socket.getInputStream();
 
+            } catch (IOException e) {
+                Log.e(TAG, "Error occurred when creating input stream", e);
+            }
+            try {
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) {
+                Log.e(TAG, "Error occurred when creating output stream", e);
+            }
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+            MainActivity.mmInStream = tmpIn;
+            MainActivity.mmOutStream = tmpOut;
+            MainActivity.BTFound = true;
+        }
+        else{
+            MainActivity.BTFound = false;
+            cancel();
+        }
     }
 
     public void run() {
@@ -97,7 +101,9 @@ public class ConnectedThread extends Thread {
     // Call this method from the main activity to shut down the connection.
     public void cancel() {
         try {
-            mmSocket.close();
+            if(mmSocket != null){
+                mmSocket.close();
+            }
         } catch (IOException e) {
             Log.e(TAG, "Could not close the connect socket", e);
         }

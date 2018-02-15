@@ -166,7 +166,9 @@ public class Settings extends AppCompatActivity {
         if(MainActivity.BTFound) {
             byte dataByte[] = strToWrite.getBytes();
             try {
-                mmOutStream.write(dataByte);
+                if(mmOutStream != null){
+                    mmOutStream.write(dataByte);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -27,16 +27,14 @@ public class BluetoothHandler extends Thread{
     private ConnectedThread BTthread;
     private Backgrounder task = null;
 
-    public BluetoothHandler(BluetoothDevice device) {
+    BluetoothHandler(BluetoothDevice device) {
         task = new Backgrounder();
-        task.execute();
+        task.doInBackground();
         BTdevice = device;
     }
 
     public void run() {
         mBluetoothAdapter.cancelDiscovery();                                                        //Cancel discovery because it otherwise slows down the connection.
-        Intent intent = new Intent();
-        intent.setAction("update");
         try {
             if(mmSocket != null){
                 mmSocket.connect();                                                                 //Connect to the remote device through the socket. This call blocks until it succeeds or throws an exception
@@ -52,7 +50,8 @@ public class BluetoothHandler extends Thread{
         }
         BTthread = new ConnectedThread(mmSocket);                                                   //Create a new thread to handle the connection.
         MainActivity.BTStatus = "connected";                                                        //Update the status for the main menu text
-        BTthread.start();                                                                           //TODO: modify ConnectedThread.run() to no hang and to handle incoming messages from the SmartMirror
+        MainActivity.BTFound = true;
+        BTthread.start();
     }
 
     void cancel() {
@@ -66,7 +65,7 @@ public class BluetoothHandler extends Thread{
             task.cancel(false);
         }
     }
-    static class Backgrounder extends AsyncTask {
+    static class Backgrounder extends AsyncTask<Void, Void, Void> {
         /*
             this function creates a background task for the bluetooth connection to keep the UI responsive to activate call:
                 task = new bluetoothTask();
@@ -76,11 +75,13 @@ public class BluetoothHandler extends Thread{
          */
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Void doInBackground(Void... voids) {
             BluetoothSocket tmp = null;                                                                 // Use a temporary object that is later assigned to mmSocket because mmSocket is final.
             UUID uuid = MainActivity.uuid;
             try {
-                tmp = BTdevice.createRfcommSocketToServiceRecord(uuid);                                   //Get a BluetoothSocket to connect with the given BluetoothDevice. uuid must match rfcomm-server.py on the Rpi
+                if(BTdevice != null){
+                    tmp = BTdevice.createRfcommSocketToServiceRecord(uuid);                                   //Get a BluetoothSocket to connect with the given BluetoothDevice. uuid must match rfcomm-server.py on the Rpi
+                }
             } catch (IOException e) {
                 Log.e(TAG, "Socket's create() method failed", e);
             }
