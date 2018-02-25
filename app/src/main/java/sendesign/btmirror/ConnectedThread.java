@@ -2,6 +2,7 @@ package sendesign.btmirror;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +11,7 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.UUID;
 
 /**
  * Created by pook on 1/2/18.
@@ -32,7 +34,7 @@ public class ConnectedThread extends Thread {
     private InputStream mmInStream = MainActivity.mmInStream;
     private OutputStream mmOutStream = MainActivity.mmOutStream;
     private byte[] mmBuffer; // mmBuffer store for the stream
-
+    public Boolean isConnected;
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
         InputStream tmpIn = null;
@@ -57,45 +59,21 @@ public class ConnectedThread extends Thread {
             MainActivity.mmInStream = tmpIn;
             MainActivity.mmOutStream = tmpOut;
             MainActivity.BTFound = true;
+            isConnected = true;
+            MainActivity.BTStatus = "connected";                                                        //Update the status for the main menu text
         }
         else{
             MainActivity.BTFound = false;
+            isConnected = false;
+            MainActivity.BTStatus = "paired";                                                        //Update the status for the main menu text
             cancel();
         }
     }
 
     public void run() {
-        mmBuffer = new byte[1024];
-        int numBytes; // bytes returned from read()
+        Backgrounder task = new Backgrounder();
+        task.doInBackground();
 
-        // Keep listening to the InputStream until an exception occurs.
-        while (true) {
-
-            }
-
-    }
-
-    // Call this from the main activity to send data to the remote device.
-    public void write(byte[] bytes) {
-        try {
-            mmOutStream.write(bytes);
-
-            // Share the sent message with the UI activity.
-            Message writtenMsg = mHandler.obtainMessage(
-                    MessageConstants.MESSAGE_WRITE, -1, -1, mmBuffer);
-            writtenMsg.sendToTarget();
-        } catch (IOException e) {
-            Log.e(TAG, "Error occurred when sending data", e);
-
-            // Send a failure message back to the activity.
-            Message writeErrorMsg =
-                    mHandler.obtainMessage(MessageConstants.MESSAGE_TOAST);
-            Bundle bundle = new Bundle();
-            bundle.putString("toast",
-                    "Couldn't send data to the other device");
-            writeErrorMsg.setData(bundle);
-            mHandler.sendMessage(writeErrorMsg);
-        }
     }
 
     // Call this method from the main activity to shut down the connection.
@@ -108,4 +86,39 @@ public class ConnectedThread extends Thread {
             Log.e(TAG, "Could not close the connect socket", e);
         }
     }
+    static class Backgrounder extends AsyncTask<Void, Void, Void> {
+        /*
+            this function creates a background task for the bluetooth connection to keep the UI responsive to activate call:
+                task = new bluetoothTask();
+                task.execute();
+
+            make sure to have task.cancel(false); in the cancel() function
+         */
+        private byte[] mmBuffer; // mmBuffer store for the stream
+        private InputStream mmInStream = MainActivity.mmInStream;
+        private OutputStream mmOutStream = MainActivity.mmOutStream;
+        @Override
+        protected Void doInBackground(Void... voids) {
+            mmBuffer = new byte[1024];
+            int numBytes; // bytes returned from read()
+
+            // Keep listening to the InputStream until an exception occurs.
+            while(MainActivity.mmInStream != null){
+                try {
+                    // Read from the InputStream.
+                    numBytes = mmInStream.read(mmBuffer);
+                    dataHandler(numBytes);
+                } catch (IOException e) {
+                    Log.d(TAG, "Input stream was disconnected", e);
+                    break;
+                }
+            }
+            return null;
+        }
+
+        private void dataHandler(int data){
+
+        }
+    }
+
 }

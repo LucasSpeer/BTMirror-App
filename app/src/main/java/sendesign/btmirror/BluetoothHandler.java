@@ -49,8 +49,6 @@ public class BluetoothHandler extends Thread{
             return;
         }
         BTthread = new ConnectedThread(mmSocket);                                                   //Create a new thread to handle the connection.
-        MainActivity.BTStatus = "connected";                                                        //Update the status for the main menu text
-        MainActivity.BTFound = true;
         BTthread.start();
     }
 

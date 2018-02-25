@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     public BluetoothHandler BTHandler;
     public BroadcastReceiver receiver;
     private Resources resources;
-    private String conStatusText[];               //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
+    private static String conStatusText[];               //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
     private TextView statusText;
 
     @Override
@@ -75,19 +75,25 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();                                  //get bluetooth adapter
+        TextView deviceList = findViewById(R.id.devList);
+        TextView listTitle = findViewById(R.id.devListTitle);
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();                                   //get bluetooth adapter
         if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-        findDevices();
+        if(BTStatus.equals("notPaired")){                                                           //if no SmartMirror has been found already,
+            findDevices();
+        }
+        else{
+            deviceList.setVisibility(View.INVISIBLE);                                               //If a SmartMirror is paired, hide the list of paired devices
+            listTitle.setVisibility(View.INVISIBLE);
+        }
         uuid = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");                             //UUID which must be the same as on the RaspPi
         final Button retry = findViewById(R.id.retryButton);
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {                                                            //Retry Button
-                updateStatus();                                            //first update the status text
-                if (!BTStatus.equals("connected")) {                                                  //create the Handler and and run it
+            public void onClick(View v) {                                                           //Retry Button
+                if (!BTStatus.equals("connected")) {                                                //create the Handler and and run it
                     BTHandler = new BluetoothHandler(BTdevice);
                     BTHandler.run();
                 }
@@ -96,15 +102,15 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.connSucceeded, Toast.LENGTH_SHORT).show();
                 }
-                updateStatus();                                            //and update the status Text again, This step and the identical line in this listener may be unnecessary thanks to the broadcast receiver
+                updateStatus();                                                                     //and update the status Text
             }
         });
-        updateStatus();
         if (!BTStatus.equals("notPaired") && !BTStatus.equals("connected") && BTStatus != null) {
             BTHandler = new BluetoothHandler(BTdevice);
             BTHandler.run();                                                                        //and attempt to connect
         }
         editor.apply();
+        updateStatus();
     }
 
     @Override
@@ -125,18 +131,18 @@ public class MainActivity extends AppCompatActivity {
         TextView listTitle = findViewById(R.id.devListTitle);
         String devStr = "";
         int i = 0;
-        if(BTFound == false) {
-            if (pairedDevices.size() > 0) {                                                             // There are paired devices. Get the name and address of each paired device.
+        if(!BTFound) {
+            if (pairedDevices.size() > 0) {                                                         // There are paired devices. Get the name and address of each paired device.
                 for (BluetoothDevice device : pairedDevices) {
                     devStr += device.getName() + " - " + device.getAddress() + "\n";
                     i++;
                     String deviceName = device.getName();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (Objects.equals(deviceName, "SmartMirror")) {                             //Mirror found among paired devices
+                        if (Objects.equals(deviceName, "SmartMirror")) {                         //Mirror found among paired devices
                             MAC = device.getAddress();
                             BTStatus = "paired";
                             BTdevice = device;
-                            deviceList.setVisibility(View.INVISIBLE);                                   //If a SmartMirror is found among the paired devices hide the list of paired devices
+                            deviceList.setVisibility(View.INVISIBLE);                               //If a SmartMirror is found among the paired devices hide the list of paired devices
                             listTitle.setVisibility(View.INVISIBLE);
 
                         } else {
@@ -146,25 +152,30 @@ public class MainActivity extends AppCompatActivity {
                 }
                 deviceList.setText(devStr);
             } else {
-                deviceList.setText(R.string.devlisterror);                                              //error - no devices found
+                deviceList.setText(R.string.devlisterror);                                          //error - no devices found
             }
         }
         else{
-            deviceList.setVisibility(View.INVISIBLE);                                   //If a SmartMirror is found among the paired devices hide the list of paired devices
+            deviceList.setVisibility(View.INVISIBLE);                                               //If a SmartMirror is found among the paired devices hide the list of paired devices
             listTitle.setVisibility(View.INVISIBLE);
         }
     }
 
     private void updateStatus() {
         String statText;
-        if (BTStatus.equals("paired")) {
-            statText = conStatusText[0] + conStatusText[5] + conStatusText[4] + MAC;              //"Connection Status: Paired, Listening"
-        } else if (BTStatus.equals("notPaired")) {
-            statText = conStatusText[0] + conStatusText[3];
-        } else if (BTStatus.equals("connected")) {
-            statText = conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC;
-        } else {
-            statText = "typo";
+        switch (BTStatus) {
+            case "paired":
+                statText = conStatusText[0] + conStatusText[5] + conStatusText[4] + MAC;              //"Connection Status: Paired, Listening"
+                break;
+            case "notPaired":
+                statText = conStatusText[0] + conStatusText[3];
+                break;
+            case "connected":
+                statText = conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC;
+                break;
+            default:
+                statText = "typo";
+                break;
         }
         statusText.setText(statText);
     }
