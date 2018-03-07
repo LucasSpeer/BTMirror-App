@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         editor.putString("layoutStr", layoutStr);
         editor.putString("settingsStr", settingsStr);
-        editor.apply();
+        editor.apply();                                                                             //When mainActivity is destroyed, save current settings
 
     }
 }

@@ -15,8 +15,8 @@
     <string name="useC">Use Celsius</string>
     <string name="zip">Zipcode - Currently:</string>
     <string name="enterZip">Enter a new 5-Digit Zipcode:</string>
-    <string name="noBT">Not Connected, Saved Locally</string>
-    <string name="yesBT">Applied</string>
+    <string name="savedLocallyStr">Not Connected, Saved Locally</string>
+    <string name="applied">Applied</string>
     <string name="connectingText">Connecting...</string>
     <string name="connSucceeded">Success!</string>
     <string name="connFailed">Failed!</string>

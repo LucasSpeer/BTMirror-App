@@ -245,10 +245,10 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            Toast.makeText(this, resources.getText(R.string.yesBT), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, resources.getText(R.string.applied), Toast.LENGTH_SHORT).show();
         }
         else{
-            Toast.makeText(this, resources.getText(R.string.noBT), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, resources.getText(R.string.savedLocallyStr), Toast.LENGTH_SHORT).show();
         }
     }
 }
