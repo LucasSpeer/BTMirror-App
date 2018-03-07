@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         statusText = findViewById(R.id.conStatus);
         layoutStr = prefs.getString("layoutStr", res.getString(R.string.defLayout));
         settingsStr = prefs.getString("settingsStr", res.getString(R.string.defSettings));
+        BTStatus = prefs.getString("BTStatus", "notPaired");
         final Button layout = findViewById(R.id.layout);                                            //Layout config button
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,10 +82,9 @@ public class MainActivity extends AppCompatActivity {
         if (!mBluetoothAdapter.isEnabled()) {                                                       //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-        if(BTStatus.equals("notPaired")){                                                           //if no SmartMirror has been found already,
+        if (BTStatus.equals("notPaired")) {                                                           //if no SmartMirror has been found already,
             findDevices();
-        }
-        else{
+        } else {
             deviceList.setVisibility(View.INVISIBLE);                                               //If a SmartMirror is paired, hide the list of paired devices
             listTitle.setVisibility(View.INVISIBLE);
         }
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 updateStatus();                                                                     //and update the status Text
             }
         });
-        if (!BTStatus.equals("notPaired") && !BTStatus.equals("connected") && BTStatus != null) {
+        if (!BTStatus.equals("notPaired") && !BTStatus.equals("connected")) {
             BTHandler = new BluetoothHandler(BTdevice);
             BTHandler.run();                                                                        //and attempt to connect
         }
@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         editor.putString("layoutStr", layoutStr);
         editor.putString("settingsStr", settingsStr);
+        editor.putString("BTStatus", BTStatus);
         editor.apply();                                                                             //When mainActivity is destroyed, save current settings
 
     }
