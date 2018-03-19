@@ -57,7 +57,7 @@
         <item>Success</item>
         <item>Not Paired</item>
         <item>\nMac Address: </item>
-        <item>Paired, Listening</item>
+        <item>Paired\nPress \"Retry\" to attempt to connect</item>
     </string-array>
     <string-array name="modules">
         <item>None</item>

@@ -93,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {                                                           //Retry Button
+                findDevices();
                 if (!BTStatus.equals("connected")) {                                                //create the Handler and and run it
                     BTHandler = new BluetoothHandler(BTdevice);
                     BTHandler.run();
@@ -165,13 +166,13 @@ public class MainActivity extends AppCompatActivity {
         String statText;
         switch (BTStatus) {
             case "paired":
-                statText = conStatusText[0] + conStatusText[5] + conStatusText[4] + MAC;              //"Connection Status: Paired, Listening"
+                statText = conStatusText[0] + conStatusText[5];              //"Connection Status: Paired, Listening"
                 break;
             case "notPaired":
                 statText = conStatusText[0] + conStatusText[3];
                 break;
             case "connected":
-                statText = conStatusText[0] + conStatusText[2] + conStatusText[4] + MAC;
+                statText = conStatusText[0] + conStatusText[2];
                 break;
             default:
                 statText = "typo";
