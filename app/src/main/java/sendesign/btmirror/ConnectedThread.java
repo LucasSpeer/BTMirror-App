@@ -56,18 +56,16 @@ public class ConnectedThread extends Thread {
             } catch (IOException e) {
                 Log.e(TAG, "Error occurred when creating output stream", e);
             }
-            InputStream mmInStream = tmpIn;
-            OutputStream mmOutStream = tmpOut;
             MainActivity.mmInStream = tmpIn;
             MainActivity.mmOutStream = tmpOut;
             MainActivity.BTFound = true;
             isConnected = true;
-            MainActivity.BTStatus = "connected";                                                        //Update the status for the main menu text
+            MainActivity.BTStatus = "connected";       //Update the status for the main menu text
         }
         else{
             MainActivity.BTFound = false;
             isConnected = false;
-            MainActivity.BTStatus = "paired";                                                        //Update the status for the main menu text
+            MainActivity.BTStatus = "paired";    //Update the status for the main menu text
             cancel();
         }
     }

@@ -3,8 +3,9 @@ package sendesign.btmirror;
     *Layout config activity
     *Functions:
     * 6 spinners w/ title that contain the list of available modules
-    * 2 buttons, back(to main menu), and config(set chosen lay)
+    * 2 buttons, back(to main menu), and config(set chosen layout)
     * SharedPreference file to store key value pairs locally
+    *
  */
 import android.content.Context;
 import android.content.Intent;
@@ -28,17 +29,17 @@ import java.util.Objects;
 
 
 public class LayoutConfig extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    private SharedPreferences prefs = null;                                                         //create a shared preference for storing layout
+    private SharedPreferences prefs = null;         //create a shared preference for storing layout
     private boolean isDefault = true;
-    final private int defaultLayout[] = {1, 2, 3, 0, 0, 0};                                         //position in R.arrays.modules, 0 = none
-    private int currentLayout[] = null;                                                             //Integer Array to hold current Layout
-    private Spinner spinArr[] = null;                                                               //Lets us globally reference each spinner by its location (TL=0, TR=1, ML=2, MR=3,...)
-    private String moduleList[] = null;                                                             //the integer held in the layout arrays correspond to the position in this array of strings containing the list of modules, populated from strings.xml
-    final private String spots[] = {"l1", "r1", "l2", "r2", "l3", "r3"};                           //strings for use as keys with savedPreferences
+    final private int defaultLayout[] = {1, 2, 3, 0, 0, 0};      //position in R.arrays.modules, 0 = none
+    private int currentLayout[] = null;         //Integer Array to hold current Layout
+    private Spinner spinArr[] = null;        //Lets us globally reference each spinner by its location (TL=0, TR=1, ML=2, MR=3,...)
+    private String moduleList[] = null;      //the integer held in the layout arrays correspond to the position in this array of strings containing the list of modules, populated from strings.xml
+    final private String spots[] = {"l1", "r1", "l2", "r2", "l3", "r3"};      //strings for use as keys with savedPreferences
     private String spotsFull[] = null;
-    private int modCnt = 0;                                                                         //Number of modules, updated dynamically from Modules.xml
+    private int modCnt = 0;        //Number of modules, updated dynamically from Modules.xml
     private long ids[];
-    private int firstRunCnt;                                                                        //onItemSelected is triggered the first time each spinner is set, this counter variable works with a loop to counteract that in the onItemSelectedListener
+    private int firstRunCnt;   //onItemSelected is triggered the first time each spinner is set, this counter variable works with a loop to counteract that in the onItemSelectedListener
     private String currentText;
     private Resources resources = null;
 
@@ -49,23 +50,23 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         resources = getResources();
         modCnt = resources.getInteger(R.integer.modCount);
         firstRunCnt = 0;
-        @SuppressWarnings("UnnecessaryLocalVariable") Spinner spinners[] =                                             //initialize spinners (ignore the redundancy warning)
+        @SuppressWarnings("UnnecessaryLocalVariable") Spinner spinners[] =     //initialize spinners (ignore the redundancy warning)
                 {findViewById(R.id.LS1), findViewById(R.id.RS1), findViewById(R.id.LS2)
                         , findViewById(R.id.RS2), findViewById(R.id.LS3), findViewById(R.id.RS3)};
-        spinArr = spinners;                                                                         //Set global spinner array
+        spinArr = spinners;     //Set global spinner array
 
-        prefs = LayoutConfig.this.getPreferences(Context.MODE_PRIVATE);                             //retrieve default preference file for storing layout as key value pairs {(string) "L1", (int)1}
-        moduleList = resources.getStringArray(R.array.modules);                                     //Populate global module string array moduleList with the values from strings.xml modules[] =  {None, Greeting, Weather, Time, News, Email}
+        prefs = LayoutConfig.this.getPreferences(Context.MODE_PRIVATE);     //retrieve default preference file for storing layout as key value pairs {(string) "L1", (int)1}
+        moduleList = resources.getStringArray(R.array.modules);     //Populate global module string array moduleList with the values from strings.xml modules[] =  {None, Greeting, Weather, Time, News, Email}
 
         int savedLayout[] = defaultLayout;
         for (int i = 0; i < savedLayout.length; i++) {
-            savedLayout[i] = prefs.getInt(spots[i], defaultLayout[i]);                              //create an array from saved key value pairs where key = spots[i] (a string) and defaultLayout[i] is the value returned when no key is found
+            savedLayout[i] = prefs.getInt(spots[i], defaultLayout[i]);     //create an array from saved key value pairs where key = spots[i] (a string) and defaultLayout[i] is the value returned when no key is found
         }
-        currentLayout = savedLayout;                                                                //set the current layout to our newly retrieved layoutArray
+        currentLayout = savedLayout;     //set the current layout to our newly retrieved layoutArray
         spotsFull = resources.getStringArray(R.array.spotNames);
         setCurrentText();
 
-        final Button back = findViewById(R.id.LayoutBack);                                          //back and config buttons
+        final Button back = findViewById(R.id.LayoutBack);    //back and config buttons
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +84,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
-        long tmpIDarr[] = new long[modCnt];                                                         //Temporary array to get the individual IDs of each spinner to be used in the onItemSelectedListener
+        long tmpIDarr[] = new long[modCnt];      //Temporary array to get the individual IDs of each spinner to be used in the onItemSelectedListener
         for (int i = 0; i < spinArr.length; i++) {
             spinArr[i].setOnItemSelectedListener(this);
             tmpIDarr[i] = spinArr[i].getId();
@@ -100,38 +101,38 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
         firstRunCnt = 0;
         int savedLayout[] = defaultLayout;
         for (int i = 0; i < savedLayout.length; i++) {
-            savedLayout[i] = prefs.getInt(spots[i], defaultLayout[i]);                              //create an array from saved key value pairs where key = spots[i] (a string) and defaultLayout[i] is the value returned when no key is found
+            savedLayout[i] = prefs.getInt(spots[i], defaultLayout[i]);    //create an array from saved key value pairs where key = spots[i] (a string) and defaultLayout[i] is the value returned when no key is found
         }
         currentLayout = savedLayout;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
-    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {              //Function On spinner clicked and item Selected
-        String chosenModule = parent.getSelectedItem().toString();                                  //get String of item selected
+    public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {    //Function On spinner clicked and item Selected
+        String chosenModule = parent.getSelectedItem().toString();      //get String of item selected
         int chosenModInt = 0;
-        int newLayout[] = currentLayout;                                                            //Save Layout from before update and set new Layout equal to it(for size mostly)
-        int modUpdatingInt = 0;                                                                     //Will be set to a value corresponding to which spinner was clicked (Left top = 0, Right top = 1, Left middle = 2,...)
+        int newLayout[] = currentLayout;         //Save Layout from before update and set new Layout equal to it(for size mostly)
+        int modUpdatingInt = 0;      //Will be set to a value corresponding to which spinner was clicked (Left top = 0, Right top = 1, Left middle = 2,...)
         int oldMod = 0;
-        if (firstRunCnt >= modCnt) {                                                                //if the spinners have been initialized
-            for (int i = 0; i < modCnt; i++) {                                                      //sets chosen module integer correspond to the position of the selected item in moduleList
-                if (Objects.equals(chosenModule, moduleList[i])) {                                  //Compares the string selected to the list of module names
+        if (firstRunCnt >= modCnt) {      //if the spinners have been initialized
+            for (int i = 0; i < modCnt; i++) {      //sets chosen module integer correspond to the position of the selected item in moduleList
+                if (Objects.equals(chosenModule, moduleList[i])) {    //Compares the string selected to the list of module names
                     chosenModInt = i;
                 }
-                if (ids[i] == parent.getId()) {                                                     //Compare the id of the Spinner the was selected with the array of spinner IDs to determine which spinner was chosen
+                if (ids[i] == parent.getId()) {     //Compare the id of the Spinner the was selected with the array of spinner IDs to determine which spinner was chosen
                     modUpdatingInt = i;
                     oldMod = newLayout[i];
                 }
             }
-            newLayout[modUpdatingInt] = chosenModInt;                                               //Update the spot chosen in the temporary layout array
-            for (int k = 0; k < modCnt; k++) {                                                      //Iterate through each spot of the layout(Before the update) and switch any spot that has the same module as the one just selected
-                if (currentLayout[k] == chosenModInt && k != modUpdatingInt && chosenModule != moduleList[0]) {                                 //with the one previously in the spinner that was clicked (unless "none" was selected)
+            newLayout[modUpdatingInt] = chosenModInt;    //Update the spot chosen in the temporary layout array
+            for (int k = 0; k < modCnt; k++) {     //Iterate through each spot of the layout(Before the update) and switch any spot that has the same module as the one just selected
+                if (currentLayout[k] == chosenModInt && k != modUpdatingInt && chosenModule != moduleList[0]) { //with the one previously in the spinner that was clicked (unless "none" was selected)
                     newLayout[k] = oldMod;
                     String newStringArr[] = getStringForSpinArr(k, newLayout);
                     ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(spinArr[k].getContext(), R.layout.support_simple_spinner_dropdown_item, newStringArr); //Create a new array adapter for the changed spot
                     spinnerArrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
                     spinArr[k].setAdapter(spinnerArrayAdapter);
-                    firstRunCnt = modCnt;                                                           //Not 100% sure this is necessary. Remove at own risk
+                    firstRunCnt = modCnt;
                 }
             }
             currentLayout = newLayout;
@@ -157,7 +158,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
     private void setCurrentText() {
         TextView currentConf = findViewById(R.id.currentConfig);
         currentText = this.getString(R.string.currentConfig);
-        int odd = 0;                                                                                //Index that always should = 0 or 1. Used to add spaces after the left side or a new line after the right side's text
+        int odd = 0;       //Index that always should = 0 or 1. Used to add spaces after the left side or a new line after the right side's text
         for (int i = 0; i < modCnt; i++) {
             currentText += (spotsFull[i] + moduleList[currentLayout[i]]);
             if (odd == 0) {
@@ -222,7 +223,7 @@ public class LayoutConfig extends AppCompatActivity implements AdapterView.OnIte
             editor.putInt(spots[i], currentLayout[i]);
             editor.apply();
         }
-        setCurrentText();                                                                           //Updates the containing the saved currentLayout
+        setCurrentText();    //Updates the containing the saved currentLayout
         /*
         The string data contains the layout settings and it's format is outlined in strings.xml
          */

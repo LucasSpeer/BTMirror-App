@@ -20,31 +20,34 @@
     <string name="connectingText">Connecting...</string>
     <string name="connSucceeded">Success!</string>
     <string name="connFailed">Failed!</string>
-    <string name="wifiRequest">Choose a Network:</string>
-    <string name="wifiKey">Enter the Password</string>
-    <string name="ok">ok</string>
-    <string name="defLayout">{\n
-                                \"layout\":\n
-                                    \"l1\": \"greeting\",\n
-                                    \"l2\": \"time\",\n
-                                    \"l3\": \"none",\n
-                                    \"r1\": \"weather\",\n
-                                    \"r2\": \"none\",\n
-                                    \"r3\": \"none\"\n
-                            },</string>
-    <string name="defSettings">\n\"weather\":\n
-                                    {\n
-                                    \"useC\": false,\n
-                                    \"zipcode\": "56001"\n
-                                    },\n
-                                \"general\":\n
-                                    {\n
-                                    \"military\": false,\n
-                                    \"showSec\": false,\n
-                                    \"color\": \"white\",\n
-                                    \"size\": 500\n
-                                    }\n
-                                }
+    <string name="wifiRequest">Enter the Password for: </string>
+    <string name="wifiOff">Please connect to your home WiFi network and retry</string>
+    <string name="ok">okay</string>
+    <string name="defLayout">
+        {\n
+        \"layout\":\n
+            \"l1\": \"greeting\",\n
+            \"l2\": \"time\",\n
+            \"l3\": \"none",\n
+            \"r1\": \"weather\",\n
+            \"r2\": \"none\",\n
+            \"r3\": \"none\"\n
+        },
+    </string>
+    <string name="defSettings">
+        \n\"weather\":\n
+            {\n
+            \"useC\": false,\n
+            \"zipcode\": "56001"\n
+            },\n
+        \"general\":\n
+            {\n
+            \"military\": false,\n
+            \"showSec\": false,\n
+            \"color\": \"white\",\n
+            \"size\": 500\n
+            }\n
+        }
     </string>
     <string-array name="spotNames">
         <item>Left Top:</item>
