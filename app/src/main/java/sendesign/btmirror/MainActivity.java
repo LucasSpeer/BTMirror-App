@@ -1,6 +1,7 @@
 package sendesign.btmirror;
 
 import android.annotation.SuppressLint;
+import android.app.DialogFragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -12,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,6 +48,9 @@ public class MainActivity extends AppCompatActivity {
     private Resources resources;
     private static String conStatusText[];               //from strings.xml conStatText[] = {"Connection Status :", "Attempting to Connect", "Successful", "Failed", "\nMac Address: "};
     private TextView statusText;
+    public static final Handler handler = new Handler();
+    public static String wifiSSID;
+    public static String wifiKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

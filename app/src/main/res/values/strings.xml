@@ -20,6 +20,9 @@
     <string name="connectingText">Connecting...</string>
     <string name="connSucceeded">Success!</string>
     <string name="connFailed">Failed!</string>
+    <string name="wifiRequest">Choose a Network:</string>
+    <string name="wifiKey">Enter the Password</string>
+    <string name="ok">ok</string>
     <string name="defLayout">{\n
                                 \"layout\":\n
                                     \"l1\": \"greeting\",\n
