@@ -20,7 +20,7 @@
     <string name="connectingText">Connecting...</string>
     <string name="connSucceeded">Success!</string>
     <string name="connFailed">Failed!</string>
-    <string name="wifiRequest">Enter the Password for: </string>
+    <string name="wifiRequest">Choose a network and enter your password</string>
     <string name="wifiOff">Please connect to your home WiFi network and retry</string>
     <string name="ok">okay</string>
     <string name="defLayout">

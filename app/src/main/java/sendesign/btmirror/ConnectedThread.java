@@ -2,6 +2,7 @@ package sendesign.btmirror;
 
 import android.app.DialogFragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -37,6 +38,7 @@ public class ConnectedThread extends Thread {
     private final BluetoothSocket mmSocket;
     private byte[] mmBuffer; // mmBuffer store for the stream
     public Boolean isConnected;
+    public static String wifiList[];
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
         InputStream tmpIn = null;
@@ -101,26 +103,20 @@ public class ConnectedThread extends Thread {
         @Override
         protected Void doInBackground(Void... voids) {
             mmBuffer = new byte[1024];
-            int numBytes; // bytes returned from read()
+            int numBytes = 0; // bytes returned from read()
+            String tmp = "";
             // Keep listening to the InputStream until an exception occurs.
             while(MainActivity.mmInStream != null){
                 try {
-                    // Read from the InputStream.
-                    numBytes = (mmInStream.read(mmBuffer));
-                    mhandler.obtainMessage(MessageConstants.MESSAGE_READ, numBytes, -1, mmBuffer).sendToTarget();
-                    DialogFragment newFragment = new WifiDialogFragment();
-                    newFragment.show(newFragment.getFragmentManager(), "wifi");
-                    String wifiSSID = MainActivity.wifiSSID;
-                    String wifiKey = MainActivity.wifiKey;
-                    String strToSend = wifiSSID + "\n" + wifiKey;
-                    if(wifiSSID != null && wifiSSID != "" && mmOutStream != null && wifiKey != null){
-                        try {
-                            mmOutStream.write(strToSend.getBytes());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
+                   // Read from the InputStream.
+                   numBytes = mmInStream.read(mmBuffer);
+                   char finalByteArr[] = new char[numBytes];
+                   for(int i = 0; i < numBytes; i++){
+                       finalByteArr[i] = ((char) mmBuffer[i]);
+                       tmp += finalByteArr[i];
+                   }
+                   wifiList = tmp.split("\n");
+                   MainActivity.showDialog();
                 } catch (IOException e) {
                     Log.d(TAG, "Input stream was disconnected", e);
                     break;
@@ -129,5 +125,6 @@ public class ConnectedThread extends Thread {
             return null;
         }
     }
+
 
 }

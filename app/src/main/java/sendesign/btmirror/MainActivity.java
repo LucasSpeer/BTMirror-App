@@ -11,6 +11,8 @@
 package sendesign.btmirror;
 
 import android.annotation.SuppressLint;
+import android.app.DialogFragment;
+import android.app.FragmentManager;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -20,6 +22,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     public static final Handler handler = new Handler();
     public static String wifiSSID;
     public static String wifiKey;
+    private static FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +70,10 @@ public class MainActivity extends AppCompatActivity {
         editor = prefs.edit();
         conStatusText = resources.getStringArray(R.array.ConStatText);
         statusText = findViewById(R.id.conStatus);
+        fragmentManager = getFragmentManager();
         layoutStr = prefs.getString("layoutStr", res.getString(R.string.defLayout));
         settingsStr = prefs.getString("settingsStr", res.getString(R.string.defSettings));
-        BTStatus = prefs.getString("BTStatus", "notPaired");
+        BTStatus = "notPaired";
         final Button layout = findViewById(R.id.layout);     //Layout config button
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +195,11 @@ public class MainActivity extends AppCompatActivity {
         statusText.setText(statText);
     }
 
+    public static void showDialog(){
+        DialogFragment wifiFragment = new WifiDialogFragment();
+
+        wifiFragment.show(fragmentManager, "dialog");
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();

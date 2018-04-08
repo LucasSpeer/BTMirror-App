@@ -20,6 +20,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/wifiList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/wififragment_layout" />
+
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
@@ -27,4 +33,5 @@
             android:ems="10"
             android:inputType="textPassword" />
     </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
