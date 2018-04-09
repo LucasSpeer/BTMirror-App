@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public static InputStream mmInStream = null;     //Initialize IO streams
     public static OutputStream mmOutStream = null;
     public static Boolean BTFound = false;
-    public static String BTStatus;
+    public static String BTStatus; //Paired, notPaired, Connected
     public static String layoutStr = "";
     public static String settingsStr = "";
     private SharedPreferences prefs = null;      //create a shared preference for storing settings
@@ -73,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getFragmentManager();
         layoutStr = prefs.getString("layoutStr", res.getString(R.string.defLayout));
         settingsStr = prefs.getString("settingsStr", res.getString(R.string.defSettings));
-        BTStatus = "notPaired";
+        BTStatus = prefs.getString("BTStatus", "notPaired");
+        if(mmOutStream == null && BTStatus != "notPaired") BTStatus = "paired";
         final Button layout = findViewById(R.id.layout);     //Layout config button
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,9 +197,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void showDialog(){
-        DialogFragment wifiFragment = new WifiDialogFragment();
+        WifiRecyclerFragment wifiFragment = new WifiRecyclerFragment();
+        fragmentManager.beginTransaction().add(wifiFragment, "wifi").commit();
 
-        wifiFragment.show(fragmentManager, "dialog");
     }
     @Override
     protected void onDestroy() {
