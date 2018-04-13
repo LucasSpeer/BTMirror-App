@@ -53,6 +53,13 @@
             android:layout_height="wrap_content"
             android:text="@string/retry" />
 
+        <Button
+            android:id="@+id/setWifiButton"
+            style="@style/Widget.AppCompat.Button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/wifiButton" />
+
     </LinearLayout>
 
     <LinearLayout

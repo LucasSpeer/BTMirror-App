@@ -20,8 +20,11 @@
     <string name="connectingText">Connecting...</string>
     <string name="connSucceeded">Success!</string>
     <string name="connFailed">Failed!</string>
-    <string name="wifiRequest">Choose a network and enter your password</string>
+    <string name="wifiRequest">Choose a network:</string>
+    <string name="passRequest">Password:</string>
     <string name="wifiOff">Could not find any WiFi Networks</string>
+    <string name="wifiButton">Setup Wifi</string>
+    <string name="wifiSelected">Current Selection: </string>
     <string name="ok">okay</string>
     <string name="defLayout">
         {\n

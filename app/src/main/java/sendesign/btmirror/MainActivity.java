@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     public static OutputStream mmOutStream = null;
     public static Boolean BTFound = false;
     public static String BTStatus; //Paired, notPaired, Connected
+    public static String wifiStatus;
     public static String layoutStr = "";
     public static String settingsStr = "";
     private SharedPreferences prefs = null;      //create a shared preference for storing settings
@@ -59,22 +60,26 @@ public class MainActivity extends AppCompatActivity {
     public static String wifiSSID;
     public static String wifiKey;
     private static FragmentManager fragmentManager;
+    private Button wifiSetup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Resources res = getResources();
+
         resources = res;
         prefs = this.getPreferences(Context.MODE_PRIVATE);    //retrieve default preference file for storing layout as key value pairs {(string) "L1", (int)1}
         editor = prefs.edit();
         conStatusText = resources.getStringArray(R.array.ConStatText);
         statusText = findViewById(R.id.conStatus);
-        fragmentManager = getFragmentManager();
+
         layoutStr = prefs.getString("layoutStr", res.getString(R.string.defLayout));
         settingsStr = prefs.getString("settingsStr", res.getString(R.string.defSettings));
         BTStatus = prefs.getString("BTStatus", "notPaired");
+        wifiStatus = prefs.getString("wifiStatus", "notConnected");
         if(mmOutStream == null && BTStatus != "notPaired") BTStatus = "paired";
+
         final Button layout = findViewById(R.id.layout);     //Layout config button
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,12 +88,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         Button settings = findViewById(R.id.settingsButton);    //Configure Modules Button
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, Settings.class);
                 startActivity(intent);
+            }
+        });
+        wifiSetup = findViewById(R.id.setWifiButton);
+        wifiSetup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent wifiIntent = new Intent(MainActivity.this, WifiSetup.class);
+                startActivity(wifiIntent);
             }
         });
         TextView deviceList = findViewById(R.id.devList);
@@ -194,11 +208,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         statusText.setText(statText);
+        if(wifiStatus == "connected"){
+            wifiSetup.setVisibility(View.VISIBLE);
+        }
+
     }
 
-    public static void showDialog(){
-        WifiRecyclerFragment wifiFragment = new WifiRecyclerFragment();
-        fragmentManager.beginTransaction().add(wifiFragment, "wifi").commit();
+    public static void showWifi(){
 
     }
     @Override
@@ -207,6 +223,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString("layoutStr", layoutStr);
         editor.putString("settingsStr", settingsStr);
         editor.putString("BTStatus", BTStatus);
+        editor.putString("wifiStatus", wifiStatus);
         editor.apply();   //When mainActivity is destroyed, save current settings
 
     }

@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ public class ConnectedThread extends Thread {
     private byte[] mmBuffer; // mmBuffer store for the stream
     public Boolean isConnected;
     public static String wifiList[];
+    public static String ssid;
     public ConnectedThread(BluetoothSocket socket) {
         mmSocket = socket;
         InputStream tmpIn = null;
@@ -116,7 +118,7 @@ public class ConnectedThread extends Thread {
                        tmp += finalByteArr[i];
                    }
                    wifiList = tmp.split("\n");
-                   MainActivity.showDialog();
+                   MainActivity.wifiStatus = "notConnected";
                 } catch (IOException e) {
                     Log.d(TAG, "Input stream was disconnected", e);
                     break;
