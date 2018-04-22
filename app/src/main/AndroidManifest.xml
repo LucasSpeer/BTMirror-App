@@ -30,9 +30,13 @@
         </activity>
         <activity
             android:name=".LayoutConfig"
-            android:label="LayoutConfig"/>
-        <activity android:name=".Settings" />
-        <activity android:name=".WifiSetup"/>
+            android:label="LayoutConfig"
+            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".Settings"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
+        <activity android:name=".WifiSetup"
+            android:windowSoftInputMode="stateHidden|adjustPan"/>
+            />
     </application>
 
 </manifest>

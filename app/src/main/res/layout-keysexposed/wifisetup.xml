@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             tools:layout_editor_absoluteX="185dp"
             tools:layout_editor_absoluteY="46dp"
-            tools:listitem="@android:layout/select_dialog_singlechoice">
+            tools:listitem="@layout/item_simple_itemview">
 
         </android.support.v7.widget.RecyclerView>
 
@@ -70,7 +70,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPassword" />
+            android:inputType="textVisiblePassword"
+            android:visibility="visible" />
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -123,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {           //Retry Button
                 findDevices();
+                if(mmInStream == null && BTStatus != "notPaired"){
+                    BTStatus = "paired";
+                }
                 if (!BTStatus.equals("connected")) {    //create the Handler and and run it
                     BTHandler = new BluetoothHandler(BTdevice);
                     BTHandler.run();
@@ -214,8 +217,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public static void showWifi(){
-
+    public Boolean isConnectedBT(){
+        if(mmOutStream != null){
+            BTStatus = "connected";
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     @Override
     protected void onDestroy() {
