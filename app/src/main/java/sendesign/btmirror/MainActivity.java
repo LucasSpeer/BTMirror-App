@@ -64,20 +64,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /*
+            Initial view setup and variable initialization.
+            The saved settings/layout are defined here (Because both LayoutConfig.java and Settings.java need to access them and couldn't if the other activity hasn't been created)
+         */
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         final Resources res = getResources();
-
         resources = res;
         prefs = this.getPreferences(Context.MODE_PRIVATE);    //retrieve default preference file for storing layout as key value pairs {(string) "L1", (int)1}
         editor = prefs.edit();
         conStatusText = resources.getStringArray(R.array.ConStatText);
         statusText = findViewById(R.id.conStatus);
 
-        layoutStr = prefs.getString("layoutStr", res.getString(R.string.defLayout));
+        layoutStr = prefs.getString("layoutStr", res.getString(R.string.defLayout));        //Get saved settings/Layout
         settingsStr = prefs.getString("settingsStr", res.getString(R.string.defSettings));
-        BTStatus = prefs.getString("BTStatus", "notPaired");
+        BTStatus = prefs.getString("BTStatus", "notPaired");        //Get last BTStatus
         wifiStatus = prefs.getString("wifiStatus", "notConnected");
+
         if(mmOutStream == null && BTStatus != "notPaired") BTStatus = "paired";
 
         final Button layout = findViewById(R.id.layout);     //Layout config button
@@ -97,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         wifiSetup = findViewById(R.id.setWifiButton);
         wifiSetup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,25 +110,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(wifiIntent);
             }
         });
+
         TextView deviceList = findViewById(R.id.devList);
         TextView listTitle = findViewById(R.id.devListTitle);
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();      //get bluetooth adapter
         if (!mBluetoothAdapter.isEnabled()) {        //If bluetooth is not enabled, enable it
             mBluetoothAdapter.enable();
         }
-        if (BTStatus.equals("notPaired")) {      //if no SmartMirror has been found already,
-            findDevices();
-        } else {
+        findDevices();
+        if (!BTStatus.equals("notPaired")) {
             deviceList.setVisibility(View.INVISIBLE);      //If a SmartMirror is paired, hide the list of paired devices
             listTitle.setVisibility(View.INVISIBLE);
         }
         uuid = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");      //UUID which must be the same as on the RaspPi
+
         final Button retry = findViewById(R.id.retryButton);
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {           //Retry Button
+                // if no SmartMirror has been found already,
                 findDevices();
-                if(mmInStream == null && BTStatus != "notPaired"){
+                if(mmInStream == null && !BTStatus.equals("notPaired")){
                     BTStatus = "paired";
                 }
                 if (!BTStatus.equals("connected")) {    //create the Handler and and run it
@@ -138,10 +145,6 @@ public class MainActivity extends AppCompatActivity {
                 updateStatus();      //and update the status Text
             }
         });
-        if (!BTStatus.equals("notPaired") && !BTStatus.equals("connected")) {
-            BTHandler = new BluetoothHandler(BTdevice);
-            BTHandler.run();      //and attempt to connect
-        }
         editor.apply();
         updateStatus();
     }
@@ -157,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         /*
         findDevices() first gets the list of devices paired, then checks if any is named SmartMirror.
         If one is found the status text is updated/hidden and the device is saved.
-        If none is found a
+        If none is found an error is shown
      */
         Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();   //check if already paired
         TextView deviceList = findViewById(R.id.devList);
@@ -170,17 +173,17 @@ public class MainActivity extends AppCompatActivity {
                     devStr += device.getName() + " - " + device.getAddress() + "\n";
                     i++;
                     String deviceName = device.getName();
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (Objects.equals(deviceName, "SmartMirror")) {        //Mirror found among paired devices
-                            MAC = device.getAddress();
+                    if (Objects.equals(deviceName, "SmartMirror")) {        //Mirror found among paired devices
+                        MAC = device.getAddress();
+                        if(mmOutStream == null){
                             BTStatus = "paired";
-                            BTdevice = device;
-                            deviceList.setVisibility(View.INVISIBLE);    //If a SmartMirror is found among the paired devices hide the list of paired devices
-                            listTitle.setVisibility(View.INVISIBLE);
-
-                        } else {
-                            BTStatus = "notPaired";
                         }
+                        BTdevice = device;
+                        deviceList.setVisibility(View.INVISIBLE);    //If a SmartMirror is found among the paired devices hide the list of paired devices
+                        listTitle.setVisibility(View.INVISIBLE);
+
+                    } else {
+                        BTStatus = "notPaired";
                     }
                 }
                 deviceList.setText(devStr);
@@ -205,16 +208,13 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case "connected":
                 statText = conStatusText[0] + conStatusText[2];
+                wifiSetup.setVisibility(View.VISIBLE);              //When connected, show wifi setup button
                 break;
             default:
                 statText = "typo";
                 break;
         }
         statusText.setText(statText);
-        if(wifiStatus == "connected"){
-            wifiSetup.setVisibility(View.VISIBLE);
-        }
-
     }
 
     public Boolean isConnectedBT(){

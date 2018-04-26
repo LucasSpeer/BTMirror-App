@@ -58,7 +58,8 @@
             style="@style/Widget.AppCompat.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/wifiButton" />
+            android:text="@string/wifiButton"
+            android:visibility="gone" />
 
     </LinearLayout>
 
