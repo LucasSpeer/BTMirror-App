@@ -43,6 +43,7 @@ public class BluetoothHandler extends Thread{
         } catch (IOException connectException) {
             try {
                 mmSocket.close();    //Unable to connect; close the socket and return.
+                MainActivity.BTStatus = "paired";
             } catch (IOException closeException) {
                 Log.e(TAG, "Could not close the client socket", closeException);
             }

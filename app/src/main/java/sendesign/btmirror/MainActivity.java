@@ -123,7 +123,16 @@ public class MainActivity extends AppCompatActivity {
             listTitle.setVisibility(View.INVISIBLE);
         }
         uuid = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");      //UUID which must be the same as on the RaspPi
-
+        if(BTdevice != null){
+            BTHandler = new BluetoothHandler(BTdevice);     //create the Handler and and run it
+            BTHandler.run();
+        }
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                updateStatus();
+            }
+        }, 4000);
         final Button retry = findViewById(R.id.retryButton);
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
                 if(mmInStream == null && !BTStatus.equals("notPaired")){
                     BTStatus = "paired";
                 }
-                if (!BTStatus.equals("connected")) {    //create the Handler and and run it
-                    BTHandler = new BluetoothHandler(BTdevice);
+                if(BTdevice != null){
+                    BTHandler = new BluetoothHandler(BTdevice);     //create the Handler and and run it
                     BTHandler.run();
                 }
                 if (!BTStatus.equals("connected")) {
@@ -143,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), R.string.connSucceeded, Toast.LENGTH_SHORT).show();
                 }
                 updateStatus();      //and update the status Text
+
             }
         });
         editor.apply();
